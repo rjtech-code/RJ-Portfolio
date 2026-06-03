@@ -67,8 +67,9 @@ const Contact = () => {
     setFormState("loading");
 
     // Backend Integration
-    try {
-      const response = await fetch("http://localhost:5000/api/contact", {
+      try {
+        const { getApiBaseUrl } = await import('../utils/api.js');
+        const response = await fetch(`${getApiBaseUrl()}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

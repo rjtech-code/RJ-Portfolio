@@ -30,7 +30,8 @@ const AdminLoginPage = () => {
 
     // Backend Authentication
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/login`, {
+      const { getApiBaseUrl } = await import('../utils/api.js');
+      const response = await fetch(`${getApiBaseUrl()}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

@@ -31,7 +31,8 @@ const AdminDashboard = () => {
     const fetchInquiries = async () => {
       try {
         const { token } = JSON.parse(session);
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact`, {
+        const { getApiBaseUrl } = await import('../utils/api.js');
+        const response = await fetch(`${getApiBaseUrl()}/api/contact`, {
           headers: { "Authorization": `Bearer ${token}` }
         });
         const data = await response.json();
@@ -47,7 +48,8 @@ const AdminDashboard = () => {
     try {
       const session = localStorage.getItem("rj_admin_session");
       const { token } = JSON.parse(session);
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/${id}`, {
+      const { getApiBaseUrl } = await import('../utils/api.js');
+      await fetch(`${getApiBaseUrl()}/api/contact/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -61,7 +63,8 @@ const AdminDashboard = () => {
     try {
       const session = localStorage.getItem("rj_admin_session");
       const { token } = JSON.parse(session);
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/${id}`, {
+      const { getApiBaseUrl } = await import('../utils/api.js');
+      const response = await fetch(`${getApiBaseUrl()}/api/contact/${id}`, {
         method: "PATCH",
         headers: { 
           "Content-Type": "application/json",
