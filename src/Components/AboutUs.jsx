@@ -53,7 +53,7 @@ const workflow = [
   { stage: "Design", desc: "UI/UX Engineering" },
   { stage: "Development", desc: "Precision Coding" },
   { stage: "Testing", desc: "QA & Optimization" },
-  { stage: "Deployment", desc: "Cloud Infrastructure" },
+  { stage: "Deployment", desc: "Cloud Infrastructure" }
 ];
 
 const stats = [
