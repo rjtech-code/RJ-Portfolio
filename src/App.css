@@ -1,0 +1,64 @@
+/* Global Engineering Design System */
+:root {
+  --tech-orange: #f97316;
+  --primary-bg: #0f172a;
+  --secondary-bg: #172554;
+  --card-bg: #1e3a8a;
+  --elevated-surface: #2563eb;
+  --primary-text: #ffffff;
+  --secondary-text: #cbd5e1;
+  --border-dark: rgba(255, 255, 255, 0.12);
+  --light-text: #f8fafc;
+}
+
+* {
+  ::selection {
+    background-color: var(--tech-orange);
+    color: #ffffff;
+  }
+}
+
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--primary-bg);
+  color: var(--primary-text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Technical Grid Overlay - recalibrated for dark theme */
+.tech-grid {
+  background-size: 30px 30px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse at center, #0f172a, transparent 90%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Engineering-style cards */
+.tech-card {
+  border: 1px solid var(--border-dark);
+  background: var(--card-bg);
+  border-radius: 8px;
+  transition:
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease;
+}
+
+.tech-card:hover {
+  border-color: var(--tech-orange);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.02em;
+}
