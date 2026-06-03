@@ -31,7 +31,7 @@ const AdminDashboard = () => {
     const fetchInquiries = async () => {
       try {
         const { token } = JSON.parse(session);
-        const response = await fetch("http://localhost:5000/api/contact", {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact`, {
           headers: { "Authorization": `Bearer ${token}` }
         });
         const data = await response.json();
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
     try {
       const session = localStorage.getItem("rj_admin_session");
       const { token } = JSON.parse(session);
-      await fetch(`http://localhost:5000/api/contact/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -61,7 +61,7 @@ const AdminDashboard = () => {
     try {
       const session = localStorage.getItem("rj_admin_session");
       const { token } = JSON.parse(session);
-      const response = await fetch(`http://localhost:5000/api/contact/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/${id}`, {
         method: "PATCH",
         headers: { 
           "Content-Type": "application/json",
