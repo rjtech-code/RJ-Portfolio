@@ -7,51 +7,77 @@ import Projects from "./Components/Projects";
 import AboutUs from "./Components/AboutUs";
 import Footer from "./Components/Footer";
 import Contact from "./Components/Contact";
+import Blog from "./Components/Blog";
 import AdminDashboard from "./Components/AdminDashboard";
 import AdminLoginPage from "./Components/AdminLoginPage";
+import SEO from "./seo/SEO";
 import "./App.css";
-
-/**
- * Section component to demonstrate the smooth scrolling and active link tracking.
- */
-const Section = ({ id, title, color }) => (
-  <section
-    id={id}
-    className={`relative min-h-screen flex items-center justify-center border-b border-white/10 ${color}`}
-  >
-    <div className="relative z-10 text-center px-4 max-w-4xl">
-      <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6 uppercase">
-        {title}
-      </h2>
-      <p className="text-lg md:text-xl font-normal text-[#CBD5E1] leading-relaxed">
-        RJ TechForce - Technical Excellence
-      </p>
-    </div>
-  </section>
-);
 
 export default function App() {
   return (
     <Router>
       <div className="relative bg-[#0F172A] text-white antialiased font-sans">
-        {/* Global technical background pattern */}
         <div className="fixed inset-0 tech-grid z-0" />
 
         <Navbar />
         <main className="relative z-10">
           <Routes>
-            <Route path="/" element={
-              <>
-                <Hero /> 
-                <Services />
-                <Technologies />
-                <Projects />
-                <AboutUs />
-                <Contact /> {/* Ensure Contact is rendered before Footer */}
-              </>
-            } />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/login" element={<AdminLoginPage />} />
+            <Route
+              path="/"
+              element={
+                <>
+                  <SEO
+                    title="Professional Web Development, UI/UX Design & Modern Digital Solutions"
+                    description="RJ TechForce is a professional web development team specializing in modern websites, responsive web applications, UI/UX design, React development, JavaScript solutions, business websites, portfolio websites, and custom digital experiences. We help businesses establish a powerful online presence."
+                    keywords="RJ TechForce, web developer, website developer, web development company, website design, React developer, JavaScript developer, frontend developer, UI UX designer, full stack developer, digital agency, business website development, custom website development, portfolio website, web application development, responsive websites, modern web design"
+                    canonical="/"
+                    structuredData={{
+                      "@context": "https://schema.org",
+                      "@type": "WebPage",
+                      "@id": "https://rjtechforce.com/#webpage",
+                      "url": "https://rjtechforce.com/",
+                      "name": "RJ TechForce | Professional Web Development & Digital Solutions",
+                      "isPartOf": { "@id": "https://rjtechforce.com/#website" },
+                      "about": { "@id": "https://rjtechforce.com/#organization" },
+                      "description": "Professional web development and digital solutions by RJ TechForce — modern websites, web applications, UI/UX design, and custom software.",
+                      "breadcrumb": { "@id": "https://rjtechforce.com/#breadcrumb" },
+                      "inLanguage": "en-IN",
+                      "potentialAction": [
+                        {
+                          "@type": "ReadAction",
+                          "target": ["https://rjtechforce.com/"]
+                        }
+                      ]
+                    }}
+                  />
+                  <Hero />
+                  <Services />
+                  <Technologies />
+                  <Projects />
+                  <AboutUs />
+                  <Blog />
+                  <Contact />
+                </>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <>
+                  <SEO title="Admin Dashboard" noIndex={true} />
+                  <AdminDashboard />
+                </>
+              }
+            />
+            <Route
+              path="/admin/login"
+              element={
+                <>
+                  <SEO title="Admin Login" noIndex={true} />
+                  <AdminLoginPage />
+                </>
+              }
+            />
           </Routes>
         </main>
         <Footer />

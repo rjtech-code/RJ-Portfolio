@@ -6,9 +6,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 const navLinks = [
   { name: "Home", href: "#home" },
   { name: "Services", href: "#services" },
-  { name: "Technologies", href: "#technologies" },
-  { name: "Projects", href: "#projects" },
+  { name: "Portfolio", href: "#projects" },
   { name: "About Us", href: "#about-us" },
+  { name: "Blog", href: "#blog" },
   { name: "Contact", href: "#contact" },
 ];
 
@@ -83,6 +83,7 @@ const Navbar = () => {
 
   return (
     <nav
+      aria-label="RJ TechForce main navigation"
       className={`fixed top-0 w-full z-50 transition-all duration-200 border-b ${
         scrolled
           ? "bg-[#0F172A]/80 backdrop-blur-md py-3 border-white/10 shadow-lg"
@@ -97,7 +98,7 @@ const Navbar = () => {
             onClick={(e) => handleNavClick(e, "#home")}
           >
             <div className="w-10 h-10 bg-[#F97316] flex items-center justify-center rounded-md">
-              <img src="/Images/RJ TechForce Logo.jpg" alt="" />
+              <img src="/Images/RJ TechForce Logo.jpg" alt="RJ TechForce Logo" width="40" height="40" />
             </div>
             <span className="text-xl font-bold tracking-tight text-white">
               TechForce

@@ -248,6 +248,7 @@ const Hero = () => {
       id="home"
       ref={sectionRef}
       onMouseMove={handleMouseMove}
+      aria-label="RJ TechForce - Professional Web Development & Digital Solutions"
       className="relative min-h-screen pt-20 flex flex-col justify-center overflow-hidden bg-[#020617]"
     >
       {/* Layer 1: Background (Subtle Parallax) */}
@@ -308,21 +309,21 @@ const Hero = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#F97316]/30 bg-[#F97316]/10 text-[#F97316] text-xs font-bold uppercase tracking-widest mb-6 md:mb-10">
-              <span className="w-2 h-2 rounded-full bg-[#F97316] animate-pulse" />
-              RJ TechForce • Engineering Excellence
+              <span className="w-2 h-2 rounded-full bg-[#F97316] animate-pulse" aria-hidden="true" />
+              RJ TechForce • Professional Web Development
             </div>
 
             <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tighter leading-tight mb-6 md:mb-10">
-              Engineering <br />
+              Professional Web <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#F97316]">
-                Digital Future
+                Development
               </span>
             </h1>
 
             <p className="text-[#CBD5E1] text-xl max-w-xl leading-relaxed mb-10 md:mb-16">
-              Transforming complex ideas into high-performance web products. Our
-              professional workstation approach ensures precision in every line
-              of code.
+              RJ TechForce builds modern websites, web applications, and custom digital solutions
+              for businesses. From React development and UI/UX design to full-stack web apps —
+              we transform ideas into high-performance digital products.
             </p>
 
             <div className="flex flex-wrap gap-4 mb-12">
@@ -330,6 +331,7 @@ const Hero = () => {
                 whileHover="hover"
                 whileTap={{ scale: 0.98 }}
                 onClick={() => scrollToSection("projects")}
+                aria-label="View our web development portfolio"
                 className="group relative bg-white text-black px-8 py-4 rounded-lg text-sm font-bold uppercase tracking-tight overflow-hidden cursor-pointer"
               >
                 <motion.span
@@ -341,16 +343,17 @@ const Hero = () => {
                   className="absolute inset-0 bg-[#F97316]"
                 />
                 <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                  View Our Products <ArrowRight size={16} />
+                  View Our Work <ArrowRight size={16} />
                 </span>
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02, borderColor: "rgba(249, 115, 22, 0.5)", color: "#F97316" }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => scrollToSection("contact")}
+                aria-label="Contact RJ TechForce for web development"
                 className="border-2 border-white/10 text-white px-8 py-4 rounded-lg text-sm font-bold uppercase tracking-tight transition-all duration-300 cursor-pointer"
               >
-                Contact Us
+                Get a Free Quote
               </motion.button>
             </div>
           </motion.div>

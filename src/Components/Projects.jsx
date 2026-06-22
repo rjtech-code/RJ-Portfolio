@@ -21,6 +21,7 @@ const projects = [
   {
     id: 1,
     title: "Face Recognition Attendance System",
+    slug: "face-recognition-attendance-system",
     category: "Web Application",
     description: "Automated attendance management using facial recognition technology and real-time reporting.",
     longDescription: "An enterprise-grade attendance tracking system leveraging advanced facial recognition algorithms to automate workforce management. It processes video streams in real-time to identify employees and log their entries with high precision.",
@@ -31,10 +32,12 @@ const projects = [
     status: "Production Ready",
     label: "Featured",
     image: "https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - Face Recognition Attendance System Web Application built with React.js and Node.js",
   },
   {
     id: 2,
     title: "Smart Inventory Dashboard",
+    slug: "smart-inventory-dashboard",
     category: "Dashboards",
     description: "Real-time inventory tracking with predictive analytics for retail supply chains.",
     longDescription: "A comprehensive dashboard for retail businesses to monitor stock levels, predict demand using historical data, and manage supplier relationships automatically.",
@@ -45,10 +48,12 @@ const projects = [
     status: "Completed",
     label: "Latest",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - Smart Inventory Dashboard with real-time analytics built with React and Chart.js",
   },
   {
     id: 3,
     title: "Global Link Corporate",
+    slug: "global-link-corporate-website",
     category: "Websites",
     description: "Multi-language high-performance website for an international logistics firm.",
     longDescription: "A high-performance corporate website focusing on scalability, accessibility, and international SEO. Built to handle millions of monthly visitors with lightning-fast load times.",
@@ -58,10 +63,12 @@ const projects = [
     devType: "Performance Web",
     status: "Completed",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - Global Link Corporate Website - high-performance business website with Next.js",
   },
   {
     id: 4,
     title: "Vortex E-Commerce",
+    slug: "vortex-ecommerce-platform",
     category: "E-Commerce",
     description: "Premium clothing store with integrated payment gateways and custom product builder.",
     longDescription: "A feature-rich online store with integrated payment gateways, real-time inventory sync, and a custom 3D product visualizer for personalized customer experiences.",
@@ -72,10 +79,12 @@ const projects = [
     status: "Completed",
     label: "Popular",
     image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - Vortex E-Commerce website with Stripe payment integration and 3D product configurator",
   },
   {
     id: 5,
     title: "CloudFlow SaaS",
+    slug: "cloudflow-saas-platform",
     category: "SaaS Platforms",
     description: "Project management tool for distributed engineering teams.",
     longDescription: "A scalable Software-as-a-Service platform built for complex business workflows, focusing on task automation and real-time collaboration between remote teams.",
@@ -85,10 +94,12 @@ const projects = [
     devType: "SaaS Dev",
     status: "Beta Testing",
     image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - CloudFlow SaaS project management platform with real-time collaboration features",
   },
   {
     id: 6,
     title: "HealthTrack App",
+    slug: "healthtrack-medical-app",
     category: "Web Application",
     description: "Patient management system for private clinics with secure video consultations.",
     longDescription: "A secure medical platform allowing clinics to manage patient records, schedule appointments, and conduct encrypted video consultations directly in the browser.",
@@ -98,10 +109,12 @@ const projects = [
     devType: "Full Stack",
     status: "Completed",
     image: "https://images.unsplash.com/photo-1504868584819-f8e90526354c?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - HealthTrack medical web application with patient management and video consultation",
   },
   {
     id: 7,
     title: "CryptoPulse Analytics",
+    slug: "cryptopulse-analytics-dashboard",
     category: "Dashboards",
     description: "Real-time cryptocurrency market tracker with custom alert systems.",
     longDescription: "Advanced analytics platform for crypto traders, providing live pricing, social sentiment analysis, and customizable trading signal alerts.",
@@ -111,10 +124,12 @@ const projects = [
     devType: "Frontend",
     status: "Completed",
     image: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - CryptoPulse analytics dashboard with real-time market data and WebSocket integration",
   },
   {
     id: 8,
     title: "Eco-Home Automation",
+    slug: "eco-home-automation-web-app",
     category: "Web Application",
     description: "Centralized control hub for smart home devices with energy monitoring.",
     longDescription: "An intuitive web application that allows homeowners to monitor and control IoT devices while providing detailed reports on energy consumption patterns.",
@@ -124,22 +139,31 @@ const projects = [
     devType: "Full Stack / IoT",
     status: "In Progress",
     image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=800",
+    imageAlt: "RJ TechForce - Eco-Home Automation web application with IoT device control and energy monitoring",
   },
 ];
 
 const ProjectCard = ({ project, index, onOpenDetail }) => {
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       whileHover={{ y: -8 }}
       className="relative group bg-[#0F172A] border border-white/5 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:border-[#F97316]/50 flex flex-col h-full"
+      aria-label={`${project.title} - Web Development Project by RJ TechForce`}
     >
       {/* Top Area: Image */}
       <div className="aspect-video overflow-hidden relative">
-        <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+        <img
+          src={project.image}
+          alt={project.imageAlt || `RJ TechForce - ${project.title} web development project`}
+          loading="lazy"
+          width="800"
+          height="450"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] to-transparent opacity-60" />
         
         {project.label && (
@@ -155,7 +179,7 @@ const ProjectCard = ({ project, index, onOpenDetail }) => {
         <div className="text-[#F97316] text-[10px] font-black uppercase tracking-widest mb-1 flex items-center gap-2">
           <Terminal size={12} /> {project.category}
         </div>
-        <h4 className="text-white font-bold text-xl mb-3 group-hover:text-[#F97316] transition-colors leading-tight">{project.title}</h4>
+        <h3 className="text-white font-bold text-xl mb-3 group-hover:text-[#F97316] transition-colors leading-tight">{project.title}</h3>
         <p className="text-[#CBD5E1] text-sm mb-6 line-clamp-2 leading-relaxed flex-grow">{project.description}</p>
         
         {/* Technology Stack Pills */}
@@ -186,7 +210,7 @@ const ProjectCard = ({ project, index, onOpenDetail }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 };
 
@@ -216,7 +240,12 @@ const ProjectModal = ({ project, onClose }) => {
 
         <div className="flex flex-col lg:flex-row">
           <div className="lg:w-1/2">
-             <img src={project.image} alt={project.title} className="w-full h-full object-cover min-h-[300px]" />
+             <img
+               src={project.image}
+               alt={project.imageAlt || `RJ TechForce - ${project.title} project case study`}
+               loading="lazy"
+               className="w-full h-full object-cover min-h-[300px]"
+             />
           </div>
           <div className="lg:w-1/2 p-8 sm:p-12">
             <div className="flex items-center gap-2 text-[#F97316] text-xs font-black uppercase tracking-[0.2em] mb-4">
@@ -293,7 +322,7 @@ const Projects = () => {
   );
 
   return (
-    <section id="projects" className="relative py-24 bg-[#020617] overflow-hidden">
+    <section id="projects" className="relative py-24 bg-[#020617] overflow-hidden" aria-label="RJ TechForce Web Development Portfolio">
       {/* --- BACKGROUND DECORATIONS --- */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.03] tech-grid" 
@@ -321,26 +350,26 @@ const Projects = () => {
             Our Work
           </motion.div>
           
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-4xl md:text-5xl font-extrabold text-white tracking-tighter mb-6"
           >
-            Projects Built With <br />
+            Web Development Portfolio — <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-[#F97316]">
-              Precision & Purpose
+              Real Projects, Real Results
             </span>
           </motion.h2>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-[#64748B] text-lg max-w-2xl mx-auto leading-relaxed"
           >
-            Every project represents our commitment to performance, scalability, 
-            clean architecture, and exceptional user experiences.
+            Explore our portfolio of websites, web applications, SaaS platforms, and dashboards —
+            each built with modern technologies, clean architecture, and exceptional user experiences.
           </motion.p>
         </div>
 
