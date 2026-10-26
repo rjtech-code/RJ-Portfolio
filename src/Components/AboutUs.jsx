@@ -279,7 +279,7 @@ const AboutUs = () => {
                   <div className="w-14 h-14 rounded-full bg-[#0F172A] border border-white/10 flex items-center justify-center text-white font-black text-xs mx-auto mb-6 group-hover:border-[#F97316] group-hover:text-[#F97316] transition-all duration-300 shadow-lg">
                     0{i + 1}
                   </div>
-                  <h5 className="text-white font-bold text-sm mb-2 uppercase tracking-widest">{step.stage}</h5>
+                  <h4 className="text-white font-bold text-sm mb-2 uppercase tracking-widest!">{step.stage}</h4>
                   <p className="text-[#64748B] text-[11px] leading-tight">{step.desc}</p>
                   
                   {/* Arrow (Mobile/Tablet) */}
@@ -337,7 +337,7 @@ const AboutUs = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8" itemScope itemType="https://schema.org/Review">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 quote: "RJ TechForce delivered our business website ahead of schedule. The design is modern, fast, and perfectly represents our brand. Our online inquiries have increased significantly.",
@@ -365,21 +365,17 @@ const AboutUs = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 className="p-8 bg-[#0F172A] border border-white/10 rounded-2xl hover:border-[#F97316]/30 transition-colors"
-                itemScope
-                itemType="https://schema.org/Review"
               >
-                <div className="flex gap-1 mb-4" aria-label={`${testimonial.rating} out of 5 stars`} itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
-                  <meta itemProp="ratingValue" content={String(testimonial.rating)} />
-                  <meta itemProp="bestRating" content="5" />
+                <div className="flex gap-1 mb-4" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
                   {Array.from({ length: testimonial.rating }).map((_, si) => (
                     <span key={si} className="text-[#F97316] text-sm" aria-hidden="true">★</span>
                   ))}
                 </div>
-                <p className="text-[#CBD5E1] text-sm leading-relaxed mb-6 italic" itemProp="reviewBody">
+                <p className="text-[#CBD5E1] text-sm leading-relaxed mb-6 italic">
                   "{testimonial.quote}"
                 </p>
-                <footer className="flex flex-col" itemProp="author" itemScope itemType="https://schema.org/Person">
-                  <span className="text-white font-bold text-sm" itemProp="name">{testimonial.author}</span>
+                <footer className="flex flex-col">
+                  <span className="text-white font-bold text-sm">{testimonial.author}</span>
                   <span className="text-[#64748B] text-xs">{testimonial.role}</span>
                 </footer>
               </motion.blockquote>

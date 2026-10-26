@@ -1,18 +1,21 @@
 import mongoose from 'mongoose';
 
+export const PROJECT_TYPES = ['Business Website', 'Web Application', 'SaaS Platform', 'E-Commerce', 'UI/UX Design', 'Other'];
+export const INQUIRY_STATUSES = ['New', 'Contacted', 'In Progress', 'Closed'];
+
 const contactSchema = new mongoose.Schema({
     fullName: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, lowercase: true },
     phone: { type: String, required: true },
-    projectType: { 
-        type: String, 
+    projectType: {
+        type: String,
         required: true,
-        enum: ['Business Website', 'Web Application', 'SaaS Platform', 'E-Commerce', 'UI/UX Design', 'Other']
+        enum: PROJECT_TYPES
     },
     projectDetails: { type: String, required: true },
     status: {
         type: String,
-        enum: ['New', 'Contacted', 'In Progress', 'Closed'],
+        enum: INQUIRY_STATUSES,
         default: 'New'
     },
     createdAt: { 

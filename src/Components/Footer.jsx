@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageSquare,
@@ -18,56 +18,64 @@ import {
   CircleDot,
   Globe,
 } from "lucide-react";
+import { business, normalizeSiteUrl } from "../config/site";
+
+const SITE_URL = normalizeSiteUrl(import.meta.env.VITE_SITE_URL);
 
 const footerNavLinks = [
-  { name: "Home", href: "#home", label: "RJ TechForce Homepage" },
-  { name: "Services", href: "#services", label: "Web Development Services" },
-  { name: "Technologies", href: "#technologies", label: "Technologies We Use" },
-  { name: "Portfolio", href: "#projects", label: "Web Development Portfolio" },
-  { name: "About Us", href: "#about-us", label: "About RJ TechForce" },
-  { name: "Blog", href: "#blog", label: "Web Development Blog & Resources" },
-  { name: "Contact", href: "#contact", label: "Contact RJ TechForce" },
+  { name: "Home", href: "/#home" },
+  { name: "Services", href: "/#services" },
+  { name: "Technologies", href: "/#technologies" },
+  { name: "Portfolio", href: "/#projects" },
+  { name: "About Us", href: "/#about-us" },
+  { name: "Blog", href: "/#blog" },
+  { name: "Contact", href: "/#contact" },
 ];
 
 const footerServices = [
-  { name: "Website Development", href: "#services", icon: <Monitor size={16} aria-hidden="true" /> },
-  { name: "Web Applications", href: "#services", icon: <Code size={16} aria-hidden="true" /> },
-  { name: "SaaS Development", href: "#services", icon: <Layers size={16} aria-hidden="true" /> },
-  { name: "UI/UX Design", href: "#services", icon: <Palette size={16} aria-hidden="true" /> },
-  { name: "E-Commerce Solutions", href: "#services", icon: <ShoppingCart size={16} aria-hidden="true" /> },
-  { name: "Maintenance & Support", href: "#services", icon: <ShieldCheck size={16} aria-hidden="true" /> },
+  { name: "Website Development", href: "/#services", icon: <Monitor size={16} aria-hidden="true" /> },
+  { name: "Web Applications", href: "/#services", icon: <Code size={16} aria-hidden="true" /> },
+  { name: "SaaS Development", href: "/#services", icon: <Layers size={16} aria-hidden="true" /> },
+  { name: "UI/UX Design", href: "/#services", icon: <Palette size={16} aria-hidden="true" /> },
+  { name: "E-Commerce Solutions", href: "/#services", icon: <ShoppingCart size={16} aria-hidden="true" /> },
+  { name: "Maintenance & Support", href: "/#services", icon: <ShieldCheck size={16} aria-hidden="true" /> },
 ];
 
 const contactInfo = [
   {
-    value: "+91 96643 73310",
-    label: "WhatsApp RJ TechForce",
+    value: business.phone.display,
+    label: `WhatsApp ${business.name}`,
     icon: <MessageSquare size={16} aria-hidden="true" />,
-    href: "https://wa.me/919664373310?text=Hello%20RJ%20TechForce,%20I%20would%20like%20to%20discuss%20a%20project.",
-    itemprop: "telephone",
+    href: `${business.whatsappUrl}?text=Hello%20RJ%20TechForce,%20I%20would%20like%20to%20discuss%20a%20project.`,
   },
   {
-    value: "rjtechforce@gmail.com",
-    label: "Email RJ TechForce",
+    value: business.email,
+    label: `Email ${business.name}`,
     icon: <Mail size={16} aria-hidden="true" />,
-    href: "mailto:rjtechforce@gmail.com?subject=Project%20Inquiry",
-    itemprop: "email",
+    href: `mailto:${business.email}?subject=Project%20Inquiry`,
   },
   {
-    value: "Churu, Rajasthan, India",
-    label: "RJ TechForce Location",
+    value: business.location.display,
+    label: `${business.name} location on Google Maps`,
     icon: <MapPin size={16} aria-hidden="true" />,
-    href: "https://maps.google.com/?q=Churu,Rajasthan,India",
-    itemprop: "address",
+    href: business.location.mapUrl,
   },
 ];
 
+const socialIcons = {
+  LinkedIn: <Users size={20} aria-hidden="true" />,
+  GitHub: <GitBranch size={20} aria-hidden="true" />,
+  Instagram: <Camera size={20} aria-hidden="true" />,
+  "Twitter / X": <X size={20} aria-hidden="true" />,
+};
+
 const socialLinks = [
-  { name: "LinkedIn", icon: <Users size={20} aria-hidden="true" />, href: "https://www.linkedin.com/company/rjtechforce" },
-  { name: "GitHub", icon: <GitBranch size={20} aria-hidden="true" />, href: "https://github.com/rjtechforce" },
-  { name: "Instagram", icon: <Camera size={20} aria-hidden="true" />, href: "https://www.instagram.com/rjtechforce" },
-  { name: "Twitter / X", icon: <X size={20} aria-hidden="true" />, href: "https://twitter.com/rjtechforce" },
-  { name: "Website", icon: <Globe size={20} aria-hidden="true" />, href: "https://rjtechforce.com" },
+  ...business.socialProfiles.map((profile) => ({
+    name: profile.name,
+    href: profile.url,
+    icon: socialIcons[profile.name] || <Globe size={20} aria-hidden="true" />,
+  })),
+  ...(SITE_URL ? [{ name: "Website", icon: <Globe size={20} aria-hidden="true" />, href: SITE_URL }] : []),
 ];
 
 const techStackBadges = [
@@ -81,7 +89,7 @@ const Footer = () => {
     const handleScroll = () => {
       setShowScrollToTop(window.scrollY > 300);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -92,8 +100,6 @@ const Footer = () => {
   return (
     <footer
       className="relative bg-[#01040D] py-16 overflow-hidden border-t border-white/5"
-      itemScope
-      itemType="https://schema.org/WPFooter"
       aria-label="RJ TechForce site footer"
     >
       {/* --- BACKGROUND ELEMENTS --- */}
@@ -110,15 +116,7 @@ const Footer = () => {
         <div className="absolute top-0 left-0 w-100 h-100 bg-blue-600/5 rounded-full blur-[100px]" />
       </div>
 
-      <div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-        itemScope
-        itemType="https://schema.org/Organization"
-      >
-        <meta itemProp="name" content="RJ TechForce" />
-        <meta itemProp="url" content="https://rjtechforce.com" />
-        <meta itemProp="email" content="rjtechforce@gmail.com" />
-        <meta itemProp="telephone" content="+91-96643-73310" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-white/10">
           {/* Column 1: RJ TechForce Info */}
@@ -128,17 +126,17 @@ const Footer = () => {
             transition={{ delay: 0.1 }}
             viewport={{ once: true }}
           >
-            <a href="#home" aria-label="RJ TechForce - Go to homepage">
+            <a href="/#home" aria-label="RJ TechForce - Go to homepage">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-10 h-10 bg-[#F97316] flex items-center justify-center rounded-md">
                   <span className="text-white font-bold text-lg" aria-hidden="true">RJ</span>
                 </div>
-                <span className="text-xl font-bold tracking-tight text-white" itemProp="name">
+                <span className="text-xl font-bold tracking-tight text-white">
                   TechForce
                 </span>
               </div>
             </a>
-            <p className="text-[#CBD5E1] text-sm leading-relaxed mb-4" itemProp="description">
+            <p className="text-[#CBD5E1] text-sm leading-relaxed mb-4">
               RJ TechForce is a professional web development team based in Rajasthan, India,
               specializing in modern websites, web applications, React development, UI/UX design,
               and custom digital solutions that help businesses grow online.
@@ -156,14 +154,13 @@ const Footer = () => {
             transition={{ delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h4 className="text-white font-bold text-lg mb-5">Quick Navigation</h4>
+            <h2 className="text-white font-bold text-lg mb-5">Quick Navigation</h2>
             <nav aria-label="Footer navigation">
               <ul className="space-y-3">
                 {footerNavLinks.map((link, i) => (
                   <motion.li key={i} whileHover={{ x: 5, color: "#F97316" }} transition={{ duration: 0.2 }}>
                     <a
                       href={link.href}
-                      aria-label={link.label}
                       className="text-[#CBD5E1] hover:text-[#F97316] transition-colors text-sm"
                     >
                       {link.name}
@@ -181,7 +178,7 @@ const Footer = () => {
             transition={{ delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <h4 className="text-white font-bold text-lg mb-5">Our Services</h4>
+            <h2 className="text-white font-bold text-lg mb-5">Our Services</h2>
             <nav aria-label="Services navigation">
               <ul className="space-y-3">
                 {footerServices.map((service, i) => (
@@ -195,7 +192,6 @@ const Footer = () => {
                     <a
                       href={service.href}
                       className="hover:text-[#F97316] transition-colors"
-                      aria-label={`RJ TechForce ${service.name}`}
                     >
                       {service.name}
                     </a>
@@ -212,7 +208,7 @@ const Footer = () => {
             transition={{ delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <h4 className="text-white font-bold text-lg mb-5">Contact RJ TechForce</h4>
+            <h2 className="text-white font-bold text-lg mb-5">Contact RJ TechForce</h2>
             <address className="not-italic">
               <ul className="space-y-3">
                 {contactInfo.map((item, i) => (
@@ -229,7 +225,6 @@ const Footer = () => {
                       rel="noopener noreferrer"
                       aria-label={item.label}
                       className="hover:text-[#F97316] transition-colors"
-                      itemProp={item.itemprop}
                     >
                       {item.value}
                     </a>
@@ -279,19 +274,18 @@ const Footer = () => {
         <div className="py-6 border-b border-white/5">
           <nav aria-label="SEO site links" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {[
-              { label: "Web Development Services", href: "#services" },
-              { label: "React Development", href: "#services" },
-              { label: "UI/UX Design", href: "#services" },
-              { label: "Portfolio", href: "#projects" },
-              { label: "Web Development Blog", href: "#blog" },
-              { label: "About RJ TechForce", href: "#about-us" },
-              { label: "Contact Us", href: "#contact" },
+              { label: "Web Development Services", href: "/#services" },
+              { label: "React Development", href: "/#services" },
+              { label: "UI/UX Design", href: "/#services" },
+              { label: "Portfolio", href: "/#projects" },
+              { label: "Web Development Blog", href: "/#blog" },
+              { label: "About RJ TechForce", href: "/#about-us" },
+              { label: "Contact Us", href: "/#contact" },
             ].map((link, i) => (
               <a
                 key={i}
                 href={link.href}
-                className="text-[#64748B] hover:text-[#F97316] text-[11px] transition-colors"
-                aria-label={link.label}
+                className="text-[#94A3B8] hover:text-[#F97316] text-[11px] transition-colors"
               >
                 {link.label}
               </a>
@@ -301,10 +295,10 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-white/50 text-xs gap-4">
-          <p>© 2026 <span itemProp="name">RJ TechForce</span>. All Rights Reserved.</p>
+          <p>© 2026 RJ TechForce. All Rights Reserved.</p>
           <p className="text-center">
             Professional Web Development &amp; Digital Solutions |{" "}
-            <a href="#contact" className="hover:text-[#F97316] transition-colors">Get a Free Quote</a>
+            <a href="/#contact" className="hover:text-[#F97316] transition-colors">Get a Free Quote</a>
           </p>
           <p>Built with React.js &amp; Tailwind CSS</p>
         </div>

@@ -62,3 +62,18 @@ h3,
 h4 {
   letter-spacing: -0.02em;
 }
+
+/* Respect the user's reduced-motion preference (framer-motion is covered by MotionConfig in App.jsx) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ExternalLink, 
@@ -22,7 +22,7 @@ const projects = [
     id: 1,
     title: "Face Recognition Attendance System",
     slug: "face-recognition-attendance-system",
-    category: "Web Application",
+    category: "Web Applications",
     description: "Automated attendance management using facial recognition technology and real-time reporting.",
     longDescription: "An enterprise-grade attendance tracking system leveraging advanced facial recognition algorithms to automate workforce management. It processes video streams in real-time to identify employees and log their entries with high precision.",
     technologies: ["React.js", "Node.js", "MySQL", "OpenCV APIs"],
@@ -100,7 +100,7 @@ const projects = [
     id: 6,
     title: "HealthTrack App",
     slug: "healthtrack-medical-app",
-    category: "Web Application",
+    category: "Web Applications",
     description: "Patient management system for private clinics with secure video consultations.",
     longDescription: "A secure medical platform allowing clinics to manage patient records, schedule appointments, and conduct encrypted video consultations directly in the browser.",
     technologies: ["React", "Firebase", "WebRTC", "Tailwind"],
@@ -130,7 +130,7 @@ const projects = [
     id: 8,
     title: "Eco-Home Automation",
     slug: "eco-home-automation-web-app",
-    category: "Web Application",
+    category: "Web Applications",
     description: "Centralized control hub for smart home devices with energy monitoring.",
     longDescription: "An intuitive web application that allows homeowners to monitor and control IoT devices while providing detailed reports on energy consumption patterns.",
     technologies: ["React", "Node.js", "MQTT", "PostgreSQL"],
@@ -156,9 +156,10 @@ const ProjectCard = ({ project, index, onOpenDetail }) => {
     >
       {/* Top Area: Image */}
       <div className="aspect-video overflow-hidden relative">
+        {/* Illustrative stock photo, not a screenshot of the project: decorative */}
         <img
           src={project.image}
-          alt={project.imageAlt || `RJ TechForce - ${project.title} web development project`}
+          alt=""
           loading="lazy"
           width="800"
           height="450"
@@ -198,8 +199,13 @@ const ProjectCard = ({ project, index, onOpenDetail }) => {
             <span className="text-white/80 text-[11px] font-bold">{project.status}</span>
           </div>
           <div className="flex gap-2">
-             <button className="p-2 bg-white/5 hover:bg-[#F97316]/10 text-white/40 hover:text-[#F97316] rounded-lg transition-colors" title="View Project">
-               <ExternalLink size={16} />
+             <button
+               onClick={() => onOpenDetail(project)}
+               className="p-2 bg-white/5 hover:bg-[#F97316]/10 text-white/40 hover:text-[#F97316] rounded-lg transition-colors"
+               title="View Project"
+               aria-label={`View ${project.title} details`}
+             >
+               <ExternalLink size={16} aria-hidden="true" />
              </button>
              <button 
               onClick={() => onOpenDetail(project)}
@@ -234,7 +240,7 @@ const ProjectModal = ({ project, onClose }) => {
         exit={{ scale: 0.9, y: 20 }}
         className="relative w-full max-w-4xl max-h-full bg-[#0F172A] border border-white/10 rounded-3xl overflow-y-auto shadow-2xl scrollbar-hide"
       >
-        <button onClick={onClose} className="absolute top-6 right-6 z-10 p-2 bg-black/50 hover:bg-[#F97316] text-white rounded-full transition-colors">
+        <button onClick={onClose} aria-label="Close project details" className="absolute top-6 right-6 z-10 p-2 bg-black/50 hover:bg-[#F97316] text-white rounded-full transition-colors">
           <X size={20} />
         </button>
 
@@ -242,7 +248,7 @@ const ProjectModal = ({ project, onClose }) => {
           <div className="lg:w-1/2">
              <img
                src={project.image}
-               alt={project.imageAlt || `RJ TechForce - ${project.title} project case study`}
+               alt=""
                loading="lazy"
                className="w-full h-full object-cover min-h-[300px]"
              />
@@ -255,17 +261,17 @@ const ProjectModal = ({ project, onClose }) => {
             
             <div className="space-y-8">
               <div>
-                <h5 className="text-white font-bold text-xs uppercase mb-3 flex items-center gap-2">
+                <h3 className="text-white font-bold text-xs uppercase mb-3 flex items-center gap-2 tracking-normal!">
                   <LayoutIcon size={12} className="text-[#F97316]" /> Project Overview
-                </h5>
+                </h3>
                 <p className="text-[#CBD5E1] text-sm leading-relaxed">{project.longDescription}</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                   <h5 className="text-white font-bold text-xs uppercase mb-3 flex items-center gap-2">
+                   <h3 className="text-white font-bold text-xs uppercase mb-3 flex items-center gap-2 tracking-normal!">
                     <CheckCircle2 size={12} className="text-[#F97316]" /> Key Features
-                  </h5>
+                  </h3>
                   <ul className="space-y-2">
                     {project.highlights?.map((h, i) => (
                       <li key={i} className="text-[#CBD5E1] text-[11px] flex items-start gap-2">
@@ -275,9 +281,9 @@ const ProjectModal = ({ project, onClose }) => {
                   </ul>
                 </div>
                 <div>
-                  <h5 className="text-white font-bold text-xs uppercase mb-3 flex items-center gap-2">
+                  <h3 className="text-white font-bold text-xs uppercase mb-3 flex items-center gap-2 tracking-normal!">
                     <Cpu size={12} className="text-[#F97316]" /> Tech Stack
-                  </h5>
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {project.technologies.map(t => (
                       <span key={t} className="px-2 py-0.5 bg-white/5 border border-white/10 text-white/70 text-[9px] font-bold uppercase rounded">{t}</span>
@@ -288,7 +294,7 @@ const ProjectModal = ({ project, onClose }) => {
 
               {project.challenges && (
                 <div className="p-5 bg-white/5 rounded-xl border border-white/5">
-                  <h5 className="text-white font-bold text-[10px] uppercase mb-2 text-[#F97316]">The Challenge</h5>
+                  <h3 className="text-white font-bold text-[10px] uppercase mb-2 text-[#F97316] tracking-normal!">The Challenge</h3>
                   <p className="text-[#CBD5E1] text-xs italic">"{project.challenges}"</p>
                 </div>
               )}

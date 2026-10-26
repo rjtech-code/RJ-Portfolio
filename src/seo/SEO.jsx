@@ -1,68 +1,55 @@
-import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
+import { DEFAULT_ROBOTS, normalizeSiteUrl } from "../config/site";
 
-const SITE_URL = "https://rjtechforce.com";
-const SITE_NAME = "RJ TechForce";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+const SITE_URL = normalizeSiteUrl(import.meta.env.VITE_SITE_URL);
 
-const SEO = ({
-  title,
-  description,
-  keywords,
-  canonical,
-  ogImage = DEFAULT_OG_IMAGE,
-  ogType = "website",
-  twitterCard = "summary_large_image",
-  noIndex = false,
-  structuredData = null,
-}) => {
-  const fullTitle = title
-    ? `${title} | ${SITE_NAME}`
-    : `${SITE_NAME} | Professional Web Development, UI/UX Design & Modern Digital Solutions`;
+// Updates the single existing tag (or creates it) so the document never holds duplicates
+const setMeta = (attr, key, content) => {
+  let el = document.head.querySelector(`meta[${attr}="${key}"]`);
+  if (content == null) {
+    el?.remove();
+    return;
+  }
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attr, key);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+};
 
-  const metaDescription =
-    description ||
-    "RJ TechForce is a professional web development team specializing in modern websites, responsive web applications, UI/UX design, React development, JavaScript solutions, business websites, and custom digital experiences.";
+const setCanonical = (href) => {
+  let el = document.head.querySelector('link[rel="canonical"]');
+  if (!href) {
+    el?.remove();
+    return;
+  }
+  if (!el) {
+    el = document.createElement("link");
+    el.setAttribute("rel", "canonical");
+    document.head.appendChild(el);
+  }
+  el.setAttribute("href", href);
+};
 
-  const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : `${SITE_URL}/`;
+// Keeps route metadata in sync after client-side navigation. The initial HTML
+// already contains the homepage tags (generated at build time from src/config/site.js).
+const SEO = ({ title, description, path, noIndex = false }) => {
+  useEffect(() => {
+    const canonical = !noIndex && SITE_URL && path ? `${SITE_URL}${path}` : null;
 
-  return (
-    <Helmet>
-      {/* Primary */}
-      <title>{fullTitle}</title>
-      <meta name="title" content={fullTitle} />
-      <meta name="description" content={metaDescription} />
-      {keywords && <meta name="keywords" content={keywords} />}
-      <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large"} />
-      <link rel="canonical" href={canonicalUrl} />
+    document.title = title;
+    setMeta("name", "description", description ?? null);
+    setMeta("name", "robots", noIndex ? "noindex, nofollow" : DEFAULT_ROBOTS);
+    setCanonical(canonical);
+    setMeta("property", "og:url", canonical);
+    setMeta("property", "og:title", noIndex ? null : title);
+    setMeta("property", "og:description", noIndex ? null : description ?? null);
+    setMeta("name", "twitter:title", noIndex ? null : title);
+    setMeta("name", "twitter:description", noIndex ? null : description ?? null);
+  }, [title, description, path, noIndex]);
 
-      {/* Open Graph */}
-      <meta property="og:type" content={ogType} />
-      <meta property="og:site_name" content={SITE_NAME} />
-      <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={metaDescription} />
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:locale" content="en_IN" />
-
-      {/* Twitter */}
-      <meta name="twitter:card" content={twitterCard} />
-      <meta name="twitter:site" content="@rjtechforce" />
-      <meta name="twitter:url" content={canonicalUrl} />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={metaDescription} />
-      <meta name="twitter:image" content={ogImage} />
-
-      {/* Structured Data */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      )}
-    </Helmet>
-  );
+  return null;
 };
 
 export default SEO;
-

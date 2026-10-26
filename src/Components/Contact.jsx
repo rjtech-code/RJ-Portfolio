@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Mail, 
@@ -11,32 +11,33 @@ import {
   Phone,
   Calendar
 } from "lucide-react";
+import { business } from "../config/site";
 
 const contactMethods = [
   {
     title: "WhatsApp Us",
-    value: "+91 96643 73310",
+    value: business.phone.display,
     icon: <MessageSquare size={20} />,
-    href: "https://wa.me/919664373310",
+    href: business.whatsappUrl,
     desc: "Instant chat for quick inquiries"
   },
   {
     title: "Email Support",
-    value: "contact@rjtechforce.com",
+    value: business.email,
     icon: <Mail size={20} />,
-    href: "mailto:contact@rjtechforce.com?subject=Project Inquiry",
+    href: `mailto:${business.email}?subject=Project%20Inquiry`,
     desc: "Detailed project requirements"
   },
   {
     title: "Our Location",
-    value: "Surat, Gujarat",
+    value: `${business.location.locality}, ${business.location.region}`,
     icon: <MapPin size={20} />,
-    href: "#",
+    href: business.location.mapUrl,
     desc: "Technical HQ"
   },
   {
     title: "Business Hours",
-    value: "Mon - Sat: 9AM - 7PM",
+    value: business.hours.display,
     icon: <Clock size={20} />,
     href: null,
     desc: "Global Availability"
@@ -147,6 +148,7 @@ const Contact = () => {
                 key={i}
                 href={method.href}
                 target={method.href?.startsWith('http') ? "_blank" : "_self"}
+                rel={method.href?.startsWith('http') ? "noopener noreferrer" : undefined}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
@@ -155,7 +157,7 @@ const Contact = () => {
                 <div className="w-10 h-10 rounded-xl bg-[#F97316]/10 flex items-center justify-center text-[#F97316] mb-4 transition-transform group-hover:scale-110">
                   {method.icon}
                 </div>
-                <h4 className="text-white font-bold text-sm mb-1">{method.title}</h4>
+                <h3 className="text-white font-bold text-sm mb-1 tracking-[-0.02em]">{method.title}</h3>
                 <p className="text-[#F97316] font-black text-xs mb-2 tracking-tight">{method.value}</p>
                 <p className="text-[#64748B] text-[10px] uppercase font-bold tracking-widest">{method.desc}</p>
               </motion.a>
@@ -192,16 +194,18 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Full Name</label>
+                  <label htmlFor="contact-name" className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Full Name</label>
                   <input 
+                    id="contact-name" name="name" autoComplete="name" maxLength={100}
                     required type="text" placeholder="John Doe"
                     className="w-full bg-[#020617] border border-white/5 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-[#F97316]/50 transition-colors"
                     value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Email Address</label>
+                  <label htmlFor="contact-email" className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Email Address</label>
                   <input 
+                    id="contact-email" name="email" autoComplete="email" maxLength={254}
                     required type="email" placeholder="john@example.com"
                     className="w-full bg-[#020617] border border-white/5 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-[#F97316]/50 transition-colors"
                     value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
@@ -211,16 +215,18 @@ const Contact = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Phone Number</label>
+                  <label htmlFor="contact-phone" className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Phone Number</label>
                   <input 
+                    id="contact-phone" name="phone" autoComplete="tel" maxLength={20}
                     required type="tel" placeholder="+1 (555) 000-0000"
                     className="w-full bg-[#020617] border border-white/5 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-[#F97316]/50 transition-colors"
                     value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Project Type</label>
+                  <label htmlFor="contact-project-type" className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Project Type</label>
                   <select 
+                    id="contact-project-type" name="projectType"
                     className="w-full bg-[#020617] border border-white/5 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-[#F97316]/50 transition-colors appearance-none"
                     value={formData.projectType} onChange={e => setFormData({...formData, projectType: e.target.value})}
                   >
@@ -230,8 +236,9 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Project Details</label>
+                <label htmlFor="contact-details" className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Project Details</label>
                 <textarea 
+                  id="contact-details" name="details" maxLength={5000}
                   required rows={4} placeholder="Describe your technical requirements..."
                   className="w-full bg-[#020617] border border-white/5 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-[#F97316]/50 transition-colors resize-none"
                   value={formData.details} onChange={e => setFormData({...formData, details: e.target.value})}
@@ -285,10 +292,10 @@ export const ContactCTABar = () => {
   return (
     <div className="bg-white/5 border-t border-white/10 py-6">
       <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-center gap-4 sm:gap-12">
-        <a href="https://wa.me/919664373310" className="flex items-center gap-3 text-white/50 hover:text-[#F97316] transition-colors text-[10px] font-black uppercase tracking-widest">
+        <a href={business.whatsappUrl} className="flex items-center gap-3 text-white/50 hover:text-[#F97316] transition-colors text-[10px] font-black uppercase tracking-widest">
           <MessageSquare size={16} /> WhatsApp Us
         </a>
-        <a href="mailto:contact@rjtechforce.com" className="flex items-center gap-3 text-white/50 hover:text-[#F97316] transition-colors text-[10px] font-black uppercase tracking-widest">
+        <a href={`mailto:${business.email}`} className="flex items-center gap-3 text-white/50 hover:text-[#F97316] transition-colors text-[10px] font-black uppercase tracking-widest">
           <Mail size={16} /> Email Us
         </a>
         <button className="flex items-center gap-3 text-white/50 hover:text-[#F97316] transition-colors text-[10px] font-black uppercase tracking-widest">

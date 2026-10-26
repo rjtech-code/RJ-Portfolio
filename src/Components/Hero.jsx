@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   motion,
   AnimatePresence,
-  useScroll,
   useMotionValue,
   useTransform,
   useSpring as useFramerSpring,
@@ -196,6 +195,37 @@ const EcommerceMockup = () => (
   </div>
 );
 
+const FloatingTechCard = ({ card, index, smoothX, smoothY }) => {
+  const x = useTransform(smoothX, (v) => v * card.factor);
+  const y = useTransform(smoothY, (v) => v * card.factor);
+
+  return (
+    <motion.div
+      style={{ x, y }}
+      className={`absolute z-30 hidden lg:flex items-center gap-3 p-2.5 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl ${card.pos}`}
+      aria-hidden="true"
+    >
+      <motion.div
+        animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
+        transition={{
+          duration: 4,
+          delay: index * 0.3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="flex items-center gap-3"
+      >
+        <div className="w-8 h-8 rounded-lg bg-[#F97316]/10 flex items-center justify-center text-[#F97316]">
+          {card.icon}
+        </div>
+        <span className="text-white text-[10px] font-black uppercase tracking-[0.15em] whitespace-nowrap">
+          {card.name}
+        </span>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const Hero = () => {
   const [sceneIndex, setSceneIndex] = useState(0);
   const sectionRef = useRef(null);
@@ -303,9 +333,10 @@ const Hero = () => {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* LEFT SIDE: Content */}
+          {/* No initial opacity: the H1 must be readable before/without JavaScript (LCP) */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ x: -30 }}
+            animate={{ x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#F97316]/30 bg-[#F97316]/10 text-[#F97316] text-xs font-bold uppercase tracking-widest mb-6 md:mb-10">
@@ -391,12 +422,12 @@ const Hero = () => {
                           transition={{ duration: 0.6, ease: "easeOut" }}
                           className="text-center"
                         >
-                          <h2 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight">
+                          <p className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight">
                             {scenes[sceneIndex].title} <br />
                             <span className="text-[#F97316]">
                               {scenes[sceneIndex].highlight}
                             </span>
-                          </h2>
+                          </p>
                           <p className="text-white/40 font-mono text-sm uppercase tracking-[0.2em]">
                             {scenes[sceneIndex].sub}
                           </p>
@@ -437,9 +468,9 @@ const Hero = () => {
                             <Monitor size={40} className="text-white" />
                           </div>
                           <div className="text-center">
-                            <h3 className="text-4xl font-black text-white mb-2">
+                            <p className="text-4xl font-black text-white mb-2 tracking-[-0.02em]">
                               {scenes[sceneIndex].title}
-                            </h3>
+                            </p>
                             <p className="text-white/60 text-lg italic">
                               {scenes[sceneIndex].sub}
                             </p>
@@ -471,32 +502,13 @@ const Hero = () => {
 
               {/* Layer 3: Floating Technology Cards */}
               {techCards.map((card, i) => (
-                <motion.div
-                  key={i}
-                  style={{
-                    x: useTransform(smoothX, (v) => v * card.factor),
-                    y: useTransform(smoothY, (v) => v * card.factor),
-                  }}
-                  className={`absolute z-30 hidden lg:flex items-center gap-3 p-2.5 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl ${card.pos}`}
-                >
-                  <motion.div
-                    animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
-                    transition={{
-                      duration: 4,
-                      delay: i * 0.3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="flex items-center gap-3"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#F97316]/10 flex items-center justify-center text-[#F97316]">
-                      {card.icon}
-                    </div>
-                    <span className="text-white text-[10px] font-black uppercase tracking-[0.15em] whitespace-nowrap">
-                      {card.name}
-                    </span>
-                  </motion.div>
-                </motion.div>
+                <FloatingTechCard
+                  key={card.name}
+                  card={card}
+                  index={i}
+                  smoothX={smoothX}
+                  smoothY={smoothY}
+                />
               ))}
 
               {/* Layer 4: Foreground Accent Elements (Strongest Parallax) */}

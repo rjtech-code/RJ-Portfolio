@@ -109,6 +109,39 @@ const ConnectionLine = ({ direction }) => {
   );
 };
 
+const TechCluster = ({ cluster, idx, x, y }) => {
+  const isLeft = cluster.id.includes('left') || idx % 2 === 0;
+  const isTop = cluster.id.includes('top') || idx < 2;
+  const clusterX = useTransform(x, (v) => v * (isLeft ? -1 : 1));
+  const clusterY = useTransform(y, (v) => v * (isTop ? -1 : 1));
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: idx * 0.15 }}
+      style={{ x: clusterX, y: clusterY }}
+      className={`relative lg:absolute ${cluster.position} w-full lg:w-72`}
+    >
+      <div className="bg-[#0F172A]/80 backdrop-blur-sm border border-white/10 rounded-xl p-5 hover:border-[#F97316]/50 transition-colors">
+        <div className="flex items-center gap-3 mb-4 text-[#F97316]">
+          <div className="p-2 bg-[#F97316]/10 rounded-lg">
+            {cluster.icon}
+          </div>
+          <h3 className="text-white font-bold text-sm uppercase tracking-wider">{cluster.title}</h3>
+        </div>
+
+        <div className="space-y-2">
+          {cluster.items.map((item) => (
+            <TechCard key={item.name} {...item} />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const Technologies = () => {
   const containerRef = useRef(null);
   const mouseX = useMotionValue(0);
@@ -172,7 +205,7 @@ const Technologies = () => {
         </div>
 
         {/* --- ECOSYSTEM DIAGRAM --- */}
-        <div className="relative min-h-[600px] flex items-center justify-center py-20">
+        <div className="relative lg:min-h-[680px] flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-0 py-10 lg:py-20">
           
           {/* Central Hub */}
           <motion.div 
@@ -190,51 +223,11 @@ const Technologies = () => {
           </motion.div>
 
           {/* Clusters */}
-          <div className="absolute inset-0 w-full h-full pointer-events-none lg:pointer-events-auto">
-            {techClusters.map((cluster, idx) => {
-              // Desktop coordinate logic for lines
-              const isLeft = cluster.id.includes('left') || idx % 2 === 0;
-              const isTop = cluster.id.includes('top') || idx < 2;
-              
-              const path = isTop 
-                ? (isLeft ? "M 200 150 Q 400 150 500 300" : "M 800 150 Q 600 150 500 300")
-                : (isLeft ? "M 200 450 Q 400 450 500 300" : "M 800 450 Q 600 450 500 300");
-
-              return (
-                <motion.div
-                  key={cluster.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.15 }}
-                  style={{ 
-                    x: useTransform(x, (v) => v * (isLeft ? -1 : 1)), 
-                    y: useTransform(y, (v) => v * (isTop ? -1 : 1)) 
-                  }}
-                  className={`absolute ${cluster.position} w-full lg:w-72 p-4 lg:p-0 mb-8 lg:mb-0`}
-                >
-                  {/* Connection Path (Visible on Desktop) */}
-                  <div className="hidden lg:block">
-                    {/* Note: Path logic here is simplified for the demo layout */}
-                  </div>
-
-                  <div className="bg-[#0F172A]/80 backdrop-blur-sm border border-white/10 rounded-xl p-5 hover:border-[#F97316]/50 transition-colors">
-                    <div className="flex items-center gap-3 mb-4 text-[#F97316]">
-                      <div className="p-2 bg-[#F97316]/10 rounded-lg">
-                        {cluster.icon}
-                      </div>
-                      <h3 className="text-white font-bold text-sm uppercase tracking-wider">{cluster.title}</h3>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      {cluster.items.map((item) => (
-                        <TechCard key={item.name} {...item} />
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+          {/* Below lg the clusters flow in a grid; from lg up they are positioned around the hub */}
+          <div className="relative w-full grid grid-cols-1 sm:grid-cols-2 gap-6 lg:block lg:absolute lg:inset-0 lg:h-full">
+            {techClusters.map((cluster, idx) => (
+              <TechCluster key={cluster.id} cluster={cluster} idx={idx} x={x} y={y} />
+            ))}
           </div>
         </div>
 

@@ -41,7 +41,7 @@ const AdminLoginPage = () => {
       if (response.ok) {
         localStorage.setItem("rj_admin_session", JSON.stringify({ 
           email: data.email, 
-          token: `Bearer ${data.token}`,
+          token: data.token,
           timestamp: Date.now() 
         }));
         navigate("/admin");
@@ -87,13 +87,15 @@ const AdminLoginPage = () => {
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Administrator Email</label>
+              <label htmlFor="admin-email" className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Administrator Email</label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#F97316] transition-colors" size={18} />
-                <input 
-                  required 
-                  type="email" 
-                  placeholder="admin@rjtechforce.com"
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#F97316] transition-colors" size={18} aria-hidden="true" />
+                <input
+                  id="admin-email"
+                  autoComplete="username"
+                  required
+                  type="email"
+                  placeholder="admin@example.com"
                   className="w-full bg-[#020617] border border-white/5 rounded-2xl pl-12 pr-4 py-4 text-sm text-white placeholder:text-white/5 focus:outline-none focus:border-[#F97316]/50 transition-all shadow-inner"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -102,11 +104,13 @@ const AdminLoginPage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Secure Password</label>
+              <label htmlFor="admin-password" className="text-[10px] font-black text-white/40 uppercase tracking-widest ml-1">Secure Password</label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#F97316] transition-colors" size={18} />
-                <input 
-                  required 
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#F97316] transition-colors" size={18} aria-hidden="true" />
+                <input
+                  id="admin-password"
+                  autoComplete="current-password"
+                  required
                   type="password" 
                   placeholder="••••••••"
                   className="w-full bg-[#020617] border border-white/5 rounded-2xl pl-12 pr-4 py-4 text-sm text-white placeholder:text-white/5 focus:outline-none focus:border-[#F97316]/50 transition-all shadow-inner"

@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files: never commit secrets
+.env
+.env.*
+backend/.env
+backend/.env.*
+!.env.example
+!backend/.env.example
+# Public, non-secret frontend build settings (VITE_* values are embedded in the bundle anyway)
+!.env.production

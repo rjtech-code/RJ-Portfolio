@@ -19,6 +19,16 @@ const AdminDashboard = () => {
   const [filterType, setFilter] = useState("All");
   const navigate = useNavigate();
 
+  // Expired or invalid session: clear it and return to the login page
+  const handleUnauthorized = (response) => {
+    if (response.status === 401) {
+      localStorage.removeItem("rj_admin_session");
+      navigate("/admin/login");
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
     // 1. Authentication & Redirection Check
     const session = localStorage.getItem("rj_admin_session");
@@ -35,8 +45,13 @@ const AdminDashboard = () => {
         const response = await fetch(`${getApiBaseUrl()}/api/contact`, {
           headers: { "Authorization": `Bearer ${token}` }
         });
+        if (response.status === 401) {
+          localStorage.removeItem("rj_admin_session");
+          navigate("/admin/login");
+          return;
+        }
         const data = await response.json();
-        setInquiries(data);
+        if (response.ok && Array.isArray(data)) setInquiries(data);
       } catch (error) {
         console.error("Error fetching inquiries:", error);
       }
@@ -49,10 +64,11 @@ const AdminDashboard = () => {
       const session = localStorage.getItem("rj_admin_session");
       const { token } = JSON.parse(session);
       const { getApiBaseUrl } = await import('../utils/api.js');
-      await fetch(`${getApiBaseUrl()}/api/contact/${id}`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/contact/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
+      if (handleUnauthorized(response) || !response.ok) return;
       setInquiries(inquiries.filter(item => item._id !== id));
     } catch (error) {
       console.error("Error deleting inquiry:", error);
@@ -72,6 +88,7 @@ const AdminDashboard = () => {
         },
         body: JSON.stringify({ status: newStatus })
       });
+      if (handleUnauthorized(response) || !response.ok) return;
       const updated = await response.json();
       setInquiries(inquiries.map(item => item._id === id ? updated : item));
     } catch (error) {
