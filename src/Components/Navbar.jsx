@@ -1,204 +1,179 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { services } from "../data/services";
+import { Icon } from "./common/Icon";
 
-const navLinks = [
-  { name: "Home", href: "/#home" },
-  { name: "Services", href: "/#services" },
-  { name: "Portfolio", href: "/#projects" },
-  { name: "About Us", href: "/#about-us" },
-  { name: "Blog", href: "/#blog" },
-  { name: "Contact", href: "/#contact" },
+const links = [
+  { to: "/", label: "Home", end: true },
+  { to: "/about", label: "About" },
+  { to: "/services", label: "Services", dropdown: true },
+  { to: "/portfolio", label: "Portfolio" },
+  { to: "/process", label: "Process" },
+  { to: "/pricing", label: "Pricing" },
+  { to: "/blog", label: "Blog" },
+  { to: "/contact", label: "Contact" },
 ];
 
+const linkClass = ({ isActive }) =>
+  `relative px-1 py-2 text-sm font-medium transition-colors after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-[#F97316] after:transition-transform ${
+    isActive ? "text-white after:scale-x-100" : "text-[#CBD5E1] hover:text-white after:scale-x-0"
+  }`;
+
+export const Logo = ({ compact = false }) => (
+  <Link to="/" className="flex items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F97316]" aria-label="RJ TechForce home">
+    <img src="/brand/rj-techforce-logo-80.png" alt="" width="40" height="40" className="w-10 h-10 rounded-lg" />
+    {!compact && (
+      <span className="leading-tight">
+        <span className="block text-lg font-bold text-white tracking-tight">RJ TechForce</span>
+        <span className="block text-[11px] text-[#94A3B8]">Build · Design · Grow</span>
+      </span>
+    )}
+  </Link>
+);
+
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const location = useLocation();
+  // Menus remember the page they were opened on, so navigating closes them
+  const [mobileOpenAt, setMobileOpenAt] = useState(null);
+  const [servicesOpenAt, setServicesOpenAt] = useState(null);
+  const mobileOpen = mobileOpenAt === location.pathname;
+  const servicesOpen = servicesOpenAt === location.pathname;
+  const setMobileOpen = (open) => setMobileOpenAt(open ? location.pathname : null);
+  const setServicesOpen = (open) => setServicesOpenAt(open ? location.pathname : null);
+  const dropdownRef = useRef(null);
 
-  // Handle Navbar shrinking on scroll
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Intersection Observer to highlight active section
+  // Close dropdown on outside click / Escape; lock scroll while the drawer is open
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "-20% 0px -70% 0px", // Trigger when section is in the upper-middle of viewport
-      threshold: 0,
+    const onClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setServicesOpenAt(null);
     };
-
-    const observerCallback = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-          // Update URL hash without jumping
-          window.history.replaceState(null, "", `#${entry.target.id}`);
-        }
-      });
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setServicesOpenAt(null);
+        setMobileOpenAt(null);
+      }
     };
-
-    const observer = new IntersectionObserver(
-      observerCallback,
-      observerOptions,
-    );
-    navLinks.forEach((link) => {
-      const element = document.getElementById(link.href.slice(2));
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
   }, []);
 
-  // Smooth scroll handler. Links point to "/#section", so on other routes
-  // (e.g. /admin) the browser follows them normally to the homepage section.
-  const handleNavClick = (e, href) => {
-    const targetId = href.split("#")[1];
-    const element = document.getElementById(targetId);
-
-    if (element) {
-      e.preventDefault();
-      const offset = 80; // Account for sticky navbar height
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-
-      setIsOpen(false);
-    }
-  };
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   return (
-    <nav
-      aria-label="RJ TechForce main navigation"
-      className={`fixed top-0 w-full z-50 transition-all duration-200 border-b ${
-        scrolled
-          ? "bg-[#0F172A]/80 backdrop-blur-md py-3 border-white/10 shadow-lg"
-          : "bg-transparent py-5 border-transparent"
+    <header
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${
+        scrolled || mobileOpen ? "bg-[var(--rj-navy-950)]/90 backdrop-blur-md border-[var(--rj-panel-border)] py-3" : "bg-transparent border-transparent py-5"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          {/* Left Side: Logo */}
-          <a
-            href="/#home"
-            className="flex-shrink-0 flex items-center gap-2 cursor-pointer rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F97316]"
-            onClick={(e) => handleNavClick(e, "/#home")}
-            aria-label="RJ TechForce home"
-          >
-            <div className="w-10 h-10 bg-[#F97316] flex items-center justify-center rounded-md">
-              <img src="/brand/rj-techforce-logo-80.png" alt="" width="40" height="40" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white">
-              TechForce
-            </span>
-          </a>
+      <nav aria-label="Main navigation" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-6">
+        <Logo />
 
-          {/* Middle: Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className={`relative px-1 py-2 text-sm font-semibold tracking-wide transition-colors duration-200 ${
-                    activeSection === link.href.slice(2)
-                      ? "text-[#F97316]"
-                      : "text-[#CBD5E1] hover:text-white"
-                  }`}
-                >
-                  {link.name}
-                  {activeSection === link.href.slice(2) && (
-                    <motion.div
-                      layoutId="activeLink"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#F97316]"
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 35,
-                      }}
-                    />
-                  )}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Side: CTA */}
-          <div className="hidden md:block">
-            <a
-              href="/#contact"
-              onClick={(e) => handleNavClick(e, "/#contact")}
-              className="inline-block bg-[#F97316] text-white px-6 py-2.5 rounded-lg text-sm font-bold uppercase tracking-tight hover:bg-[#EA580C] transition-all duration-200 shadow-lg shadow-[#F97316]/20 transform hover:-translate-y-0.5 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              Contact Us
-            </a>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md text-[#CBD5E1] hover:text-white focus-visible:outline-2 focus-visible:outline-[#F97316]"
-              aria-label="Toggle menu"
-              aria-expanded={isOpen}
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-            />
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
-              className="fixed right-0 top-0 h-full w-72 bg-[#0F172A] shadow-2xl z-50 md:hidden px-6 py-8 border-l border-white/10"
-            >
-              <div className="flex flex-col space-y-6 mt-10">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
-                    className={`text-lg font-bold tracking-tight border-b border-transparent ${
-                      activeSection === link.href.slice(2)
-                        ? "text-[#F97316]"
-                        : "text-[#CBD5E1]"
-                    }`}
+        <ul className="hidden lg:flex items-center gap-6">
+          {links.map((link) =>
+            link.dropdown ? (
+              <li key={link.to} ref={dropdownRef} className="relative" onMouseLeave={() => setServicesOpen(false)}>
+                <div className="flex items-center" onMouseEnter={() => setServicesOpen(true)}>
+                  <NavLink to={link.to} className={linkClass}>{link.label}</NavLink>
+                  <button
+                    type="button"
+                    aria-label="Show services"
+                    aria-expanded={servicesOpen}
+                    aria-controls="services-menu"
+                    onClick={() => setServicesOpen(!servicesOpen)}
+                    className="ml-1 p-1 rounded text-[#CBD5E1] hover:text-white focus-visible:outline-2 focus-visible:outline-[#F97316]"
                   >
-                    {link.name}
-                  </a>
-                ))}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </nav>
+                    <ChevronDown size={14} aria-hidden="true" className={`transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
+                  </button>
+                </div>
+                <div id="services-menu" hidden={!servicesOpen} className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[560px]">
+                  <ul className="grid grid-cols-2 gap-1 p-3 rounded-2xl border border-[var(--rj-panel-border)] bg-[var(--rj-panel)] shadow-2xl shadow-black/50">
+                    {services.map((service) => (
+                      <li key={service.slug}>
+                        <Link to={`/services/${service.slug}`} className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors group">
+                          <span className="w-9 h-9 shrink-0 rounded-lg bg-[#F97316]/10 text-[#F97316] flex items-center justify-center"><Icon name={service.icon} size={18} /></span>
+                          <span>
+                            <span className="block text-sm font-semibold text-white group-hover:text-[#F97316]">{service.title}</span>
+                            <span className="block text-xs text-[#94A3B8] line-clamp-1">{service.summary}</span>
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                    <li className="col-span-2 border-t border-white/5 mt-1 pt-2">
+                      <Link to="/services" className="block px-3 py-2 text-sm font-semibold text-[#F97316] hover:underline">View all services →</Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            ) : (
+              <li key={link.to}>
+                <NavLink to={link.to} end={link.end} className={linkClass}>{link.label}</NavLink>
+              </li>
+            )
+          )}
+        </ul>
+
+        <div className="flex items-center gap-3">
+          <Link to="/contact" className="hidden sm:inline-flex items-center bg-[#F97316] text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#EA580C] transition-colors shadow-lg shadow-[#F97316]/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+            Get a Quote
+          </Link>
+          <button
+            type="button"
+            className="lg:hidden p-2 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-[#F97316]"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile drawer */}
+      <div id="mobile-menu" hidden={!mobileOpen} className="lg:hidden max-h-[calc(100vh-72px)] overflow-y-auto border-t border-[var(--rj-panel-border)] bg-[var(--rj-navy-950)]">
+        <ul className="px-4 py-4 space-y-1">
+          {links.map((link) => (
+            <li key={link.to}>
+              <NavLink to={link.to} end={link.end} className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold ${isActive ? "bg-[#F97316]/10 text-[#F97316]" : "text-white hover:bg-white/5"}`}>
+                {link.label}
+              </NavLink>
+              {link.dropdown && (
+                <ul className="ml-4 mt-1 mb-2 border-l border-white/10 pl-3 space-y-0.5">
+                  {services.map((service) => (
+                    <li key={service.slug}>
+                      <NavLink to={`/services/${service.slug}`} className={({ isActive }) => `block px-3 py-2 rounded-lg text-sm ${isActive ? "text-[#F97316]" : "text-[#CBD5E1] hover:text-white"}`}>
+                        {service.title}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+          <li className="pt-3">
+            <Link to="/contact" className="block text-center bg-[#F97316] text-white px-5 py-3 rounded-xl font-bold">Get a Quote</Link>
+          </li>
+        </ul>
+      </div>
+    </header>
   );
 };
 

@@ -72,19 +72,32 @@ const updateInquiryStatus = async (req, res) => {
             return res.status(400).json({ message: 'Invalid inquiry id.' });
         }
 
-        // Only "status" may be changed
+        // Only CRM fields may be changed: status, notes, followUpDate
         const body = req.body;
-        if (!isPlainObject(body) || Object.keys(body).some((key) => key !== 'status')) {
-            return res.status(400).json({ message: 'Only the status field can be updated.' });
+        const allowed = ['status', 'notes', 'followUpDate'];
+        if (!isPlainObject(body) || !Object.keys(body).length || Object.keys(body).some((key) => !allowed.includes(key))) {
+            return res.status(400).json({ message: 'Only status, notes and follow-up date can be updated.' });
         }
-        if (!INQUIRY_STATUSES.includes(body.status)) {
+        if ('status' in body && !INQUIRY_STATUSES.includes(body.status)) {
             return res.status(400).json({ message: 'Invalid status value.' });
+        }
+        if ('notes' in body && (typeof body.notes !== 'string' || body.notes.length > 5000)) {
+            return res.status(400).json({ message: 'Notes must be text (max 5000 characters).' });
+        }
+        let followUpDate;
+        if ('followUpDate' in body) {
+            followUpDate = body.followUpDate === null || body.followUpDate === '' ? null : new Date(body.followUpDate);
+            if (followUpDate && (typeof body.followUpDate !== 'string' || Number.isNaN(followUpDate.getTime()))) {
+                return res.status(400).json({ message: 'Invalid follow-up date.' });
+            }
         }
 
         const inquiry = await Contact.findById(req.params.id);
         if (!inquiry) return res.status(404).json({ message: 'Inquiry not found' });
 
-        inquiry.status = body.status;
+        if ('status' in body) inquiry.status = body.status;
+        if ('notes' in body) inquiry.notes = body.notes;
+        if (followUpDate !== undefined) inquiry.followUpDate = followUpDate;
         const updatedInquiry = await inquiry.save();
         res.json(updatedInquiry);
     } catch (error) {

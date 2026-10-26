@@ -1,62 +1,43 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { Lock, Mail, ShieldCheck, AlertCircle, ArrowRight } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Lock, Mail, ShieldCheck, AlertCircle, ArrowRight, ArrowLeft } from "lucide-react";
+import { getSession, login } from "../../services/adminApi";
+import { useNoIndexTitle } from "../../hooks/useSeo";
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const location = useLocation();
+  const [error, setError] = useState(location.state?.expired ? "Your session has expired. Please sign in again." : "");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  useNoIndexTitle("Admin Login | RJ TechForce");
 
   useEffect(() => {
-    const session = localStorage.getItem("rj_admin_session");
-    if (session) {
-      navigate("/admin");
-    }
+    if (getSession()) navigate("/admin", { replace: true });
   }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    
     if (!email || !password) {
       setError("Please fill in all fields.");
       return;
     }
-
     setIsLoading(true);
-
-    // Backend Authentication
     try {
-      const { getApiBaseUrl } = await import('../utils/api.js');
-      const response = await fetch(`${getApiBaseUrl()}/api/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("rj_admin_session", JSON.stringify({ 
-          email: data.email, 
-          token: data.token,
-          timestamp: Date.now() 
-        }));
-        navigate("/admin");
-      } else {
-        setError(data.message || "Invalid administrator credentials.");
-      }
+      await login(email, password);
+      navigate(location.state?.from || "/admin", { replace: true });
     } catch (err) {
-      setError("Server connection failed.");
+      setError(err.status === 429 ? "Too many attempts. Please wait a few minutes and try again." : err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[var(--rj-navy-950)] flex items-center justify-center p-4 relative overflow-hidden font-sans">
       {/* Engineering Background Elements */}
       <div className="absolute inset-0 opacity-[0.03] tech-grid pointer-events-none" 
            style={{ backgroundImage: `radial-gradient(circle, white 1px, transparent 1px)`, backgroundSize: '50px 50px' }} />
@@ -69,7 +50,7 @@ const AdminLoginPage = () => {
         transition={{ duration: 0.5, ease: "circOut" }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="bg-[#0F172A] border border-white/10 p-8 sm:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+        <div className="bg-[var(--rj-panel)] border border-[var(--rj-panel-border)] p-8 sm:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
           {/* Animated Tech Accent */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#F97316] to-transparent" />
           
@@ -126,9 +107,10 @@ const AdminLoginPage = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
+                  role="alert"
                   className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-xs flex items-center gap-3 font-bold"
                 >
-                  <AlertCircle size={16} className="shrink-0" />
+                  <AlertCircle size={16} className="shrink-0" aria-hidden="true" />
                   {error}
                 </motion.div>
               )}
@@ -144,6 +126,9 @@ const AdminLoginPage = () => {
               )}
             </button>
           </form>
+          <Link to="/" className="mt-8 flex items-center justify-center gap-2 text-xs text-[#94A3B8] hover:text-[#F97316]">
+            <ArrowLeft size={14} aria-hidden="true" /> Back to website
+          </Link>
         </div>
       </motion.div>
     </div>

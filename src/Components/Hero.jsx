@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   motion,
   AnimatePresence,
@@ -129,7 +130,7 @@ const WebsiteMockup = () => (
 );
 
 const DashboardMockup = () => (
-  <div className="w-full h-full bg-[#020617] p-3 flex gap-3 rounded-lg">
+  <div className="w-full h-full bg-[var(--rj-navy-950)] p-3 flex gap-3 rounded-lg">
     <div className="w-12 h-full bg-white/5 rounded-md flex flex-col items-center py-4 gap-4">
       {[1, 2, 3, 4].map((i) => (
         <div key={i} className="w-6 h-6 rounded bg-white/5" />
@@ -259,27 +260,13 @@ const Hero = () => {
     mouseY.set(y);
   };
 
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      window.scrollTo({
-        top: elementPosition - offset,
-        behavior: "smooth",
-      });
-    }
-  };
-
   return (
     <section
       id="home"
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       aria-label="RJ TechForce - Professional Web Development & Digital Solutions"
-      className="relative min-h-screen pt-20 flex flex-col justify-center overflow-hidden bg-[#020617]"
+      className="relative min-h-screen pt-20 flex flex-col justify-center overflow-hidden bg-[var(--rj-navy-950)]"
     >
       {/* Layer 1: Background (Subtle Parallax) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -351,41 +338,25 @@ const Hero = () => {
               </span>
             </h1>
 
-            <p className="text-[#CBD5E1] text-xl max-w-xl leading-relaxed mb-10 md:mb-16">
+            <p className="text-[#94A3B8] text-lg max-w-xl leading-relaxed mb-10 md:mb-16">
               RJ TechForce builds modern websites, web applications, and custom digital solutions
               for businesses. From React development and UI/UX design to full-stack web apps —
               we transform ideas into high-performance digital products.
             </p>
 
             <div className="flex flex-wrap gap-4 mb-12">
-              <motion.button
-                whileHover="hover"
-                whileTap={{ scale: 0.98 }}
-                onClick={() => scrollToSection("projects")}
-                aria-label="View our web development portfolio"
-                className="group relative bg-white text-black px-8 py-4 rounded-lg text-sm font-bold uppercase tracking-tight overflow-hidden cursor-pointer"
+              <Link
+                to="/contact"
+                className="group inline-flex items-center gap-2 bg-[#F97316] text-white px-8 py-4 rounded-lg text-sm font-bold shadow-lg shadow-[#F97316]/25 transition-all hover:bg-[#EA580C] hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
-                <motion.span
-                  variants={{
-                    hover: { width: "100%" },
-                  }}
-                  initial={{ width: 0 }}
-                  transition={{ duration: 0.4, ease: "circOut" }}
-                  className="absolute inset-0 bg-[#F97316]"
-                />
-                <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                  View Our Work <ArrowRight size={16} />
-                </span>
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02, borderColor: "rgba(249, 115, 22, 0.5)", color: "#F97316" }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => scrollToSection("contact")}
-                aria-label="Contact RJ TechForce for web development"
-                className="border-2 border-white/10 text-white px-8 py-4 rounded-lg text-sm font-bold uppercase tracking-tight transition-all duration-300 cursor-pointer"
+                Start Your Project <ArrowRight size={16} aria-hidden="true" className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
+              <Link
+                to="/portfolio"
+                className="inline-flex items-center border border-[var(--rj-panel-border)] bg-white/[0.02] text-white px-8 py-4 rounded-lg text-sm font-bold transition-all hover:border-[#F97316]/60 hover:text-[#F97316] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F97316]"
               >
-                Get a Free Quote
-              </motion.button>
+                View Our Work
+              </Link>
             </div>
           </motion.div>
 

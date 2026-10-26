@@ -6,6 +6,8 @@ import contactRoutes from './contactRoutes.js';
 import { buildCorsOptions } from './corsOptions.js';
 import { createAdminToken, isAuthConfigured, safeEqual } from './auth.js';
 import rateLimit from './rateLimit.js';
+import adminRoutes from './adminRoutes.js';
+import publicRoutes from './publicRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -29,10 +31,13 @@ app.use((req, res, next) => {
 // Restrict cross-origin requests to the exact origins listed in FRONTEND_URL
 const { options: corsOptions } = buildCorsOptions();
 app.use(cors(corsOptions));
+// Admin content (blog posts) can be larger; public endpoints keep a small limit
+app.use('/api/admin', express.json({ limit: '200kb' }));
 app.use(express.json({ limit: '20kb' }));
 
 // API Routes
 app.use('/api/contact', contactRoutes);
+app.use('/api/public', publicRoutes);
 
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -59,6 +64,9 @@ app.post('/api/admin/login', loginLimiter, (req, res) => {
         res.status(401).json({ message: 'Invalid administrator credentials.' });
     }
 });
+
+// Protected admin API (every route requires a valid admin token)
+app.use('/api/admin', adminRoutes);
 
 app.use((req, res) => {
     res.status(404).json({ message: 'Not found' });
