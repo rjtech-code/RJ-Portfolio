@@ -1,321 +1,129 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  MessageSquare,
-  Mail,
-  MapPin,
-  Users,
-  GitBranch,
-  Camera,
-  X,
-  ArrowUp,
-  Monitor,
-  Code,
-  Layers,
-  Palette,
-  ShoppingCart,
-  ShieldCheck,
-  CircleDot,
-  Globe,
-} from "lucide-react";
-import { business, normalizeSiteUrl } from "../config/site";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUp, Camera, Clock, Globe, GitBranch, Mail, MapPin, MessageSquare, Users, X } from "lucide-react";
+import { services } from "../data/services";
+import { useSiteData } from "../hooks/useSiteData";
+import { locationDisplay, mapUrl, whatsappUrl } from "../config/site";
+import { Logo } from "./Navbar";
 
-const SITE_URL = normalizeSiteUrl(import.meta.env.VITE_SITE_URL);
-
-const footerNavLinks = [
-  { name: "Home", href: "/#home" },
-  { name: "Services", href: "/#services" },
-  { name: "Technologies", href: "/#technologies" },
-  { name: "Portfolio", href: "/#projects" },
-  { name: "About Us", href: "/#about-us" },
-  { name: "Blog", href: "/#blog" },
-  { name: "Contact", href: "/#contact" },
+const companyLinks = [
+  { to: "/about", label: "About Us" },
+  { to: "/portfolio", label: "Portfolio" },
+  { to: "/process", label: "Our Process" },
+  { to: "/pricing", label: "Pricing" },
+  { to: "/blog", label: "Blog" },
+  { to: "/faq", label: "FAQ" },
+  { to: "/contact", label: "Contact" },
 ];
 
-const footerServices = [
-  { name: "Website Development", href: "/#services", icon: <Monitor size={16} aria-hidden="true" /> },
-  { name: "Web Applications", href: "/#services", icon: <Code size={16} aria-hidden="true" /> },
-  { name: "SaaS Development", href: "/#services", icon: <Layers size={16} aria-hidden="true" /> },
-  { name: "UI/UX Design", href: "/#services", icon: <Palette size={16} aria-hidden="true" /> },
-  { name: "E-Commerce Solutions", href: "/#services", icon: <ShoppingCart size={16} aria-hidden="true" /> },
-  { name: "Maintenance & Support", href: "/#services", icon: <ShieldCheck size={16} aria-hidden="true" /> },
-];
+const socialIcons = { Instagram: Camera, LinkedIn: Users, GitHub: GitBranch, "Twitter / X": X, X };
 
-const contactInfo = [
-  {
-    value: business.phone.display,
-    label: `WhatsApp ${business.name}`,
-    icon: <MessageSquare size={16} aria-hidden="true" />,
-    href: `${business.whatsappUrl}?text=Hello%20RJ%20TechForce,%20I%20would%20like%20to%20discuss%20a%20project.`,
-  },
-  {
-    value: business.email,
-    label: `Email ${business.name}`,
-    icon: <Mail size={16} aria-hidden="true" />,
-    href: `mailto:${business.email}?subject=Project%20Inquiry`,
-  },
-  {
-    value: business.location.display,
-    label: `${business.name} location on Google Maps`,
-    icon: <MapPin size={16} aria-hidden="true" />,
-    href: business.location.mapUrl,
-  },
-];
-
-const socialIcons = {
-  LinkedIn: <Users size={20} aria-hidden="true" />,
-  GitHub: <GitBranch size={20} aria-hidden="true" />,
-  Instagram: <Camera size={20} aria-hidden="true" />,
-  "Twitter / X": <X size={20} aria-hidden="true" />,
-};
-
-const socialLinks = [
-  ...business.socialProfiles.map((profile) => ({
-    name: profile.name,
-    href: profile.url,
-    icon: socialIcons[profile.name] || <Globe size={20} aria-hidden="true" />,
-  })),
-  ...(SITE_URL ? [{ name: "Website", icon: <Globe size={20} aria-hidden="true" />, href: SITE_URL }] : []),
-];
-
-const techStackBadges = [
-  "React.js", "Tailwind CSS", "JavaScript", "Node.js", "MongoDB", "MySQL", "Next.js", "TypeScript"
-];
+const FooterHeading = ({ children }) => <h2 className="text-white font-bold text-base mb-5">{children}</h2>;
 
 const Footer = () => {
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const { settings } = useSiteData();
+  const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollToTop(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setShowTop(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const whatsapp = whatsappUrl(settings, "Hello RJ TechForce, I would like to discuss a project.");
 
   return (
-    <footer
-      className="relative bg-[#01040D] py-16 overflow-hidden border-t border-white/5"
-      aria-label="RJ TechForce site footer"
-    >
-      {/* --- BACKGROUND ELEMENTS --- */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{ backgroundImage: `radial-gradient(circle, white 1px, transparent 1px)`, backgroundSize: "40px 40px" }}
-        />
-        <svg className="absolute inset-0 w-full h-full opacity-5">
-          <path d="M 0 0 L 1000 0 L 1000 1000 L 0 1000 Z M 500 0 L 500 1000 M 0 500 L 1000 500" stroke="#F97316" strokeWidth="0.5" fill="none" />
-          <circle cx="20%" cy="20%" r="3" fill="#F97316" />
-          <circle cx="80%" cy="80%" r="3" fill="#F97316" />
-        </svg>
-        <div className="absolute top-0 left-0 w-100 h-100 bg-blue-600/5 rounded-full blur-[100px]" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-white/10">
-          {/* Column 1: RJ TechForce Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <a href="/#home" aria-label="RJ TechForce - Go to homepage">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-[#F97316] flex items-center justify-center rounded-md">
-                  <span className="text-white font-bold text-lg" aria-hidden="true">RJ</span>
-                </div>
-                <span className="text-xl font-bold tracking-tight text-white">
-                  TechForce
-                </span>
-              </div>
-            </a>
-            <p className="text-[#CBD5E1] text-sm leading-relaxed mb-4">
-              RJ TechForce is a professional web development team based in Rajasthan, India,
-              specializing in modern websites, web applications, React development, UI/UX design,
-              and custom digital solutions that help businesses grow online.
+    <footer className="relative bg-[#040A16] border-t border-[var(--rj-panel-border)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1.3fr] gap-10 pb-12 border-b border-white/5">
+          <div>
+            <Logo />
+            <p className="text-[#94A3B8] text-sm leading-relaxed mt-5 mb-5 max-w-xs">
+              A web development team building websites, web applications and digital products for businesses.
             </p>
-            <div className="flex items-center gap-2 text-[#F97316] text-xs font-bold uppercase tracking-widest">
-              <CircleDot className="animate-pulse" size={12} aria-hidden="true" />
-              Available For Projects
-            </div>
-          </motion.div>
+            {settings.hours && (
+              <p className="inline-flex items-center gap-2 text-sm text-[#FDBA74]">
+                <Clock size={14} aria-hidden="true" /> {settings.hours}
+              </p>
+            )}
+          </div>
 
-          {/* Column 2: Quick Navigation */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-white font-bold text-lg mb-5">Quick Navigation</h2>
-            <nav aria-label="Footer navigation">
-              <ul className="space-y-3">
-                {footerNavLinks.map((link, i) => (
-                  <motion.li key={i} whileHover={{ x: 5, color: "#F97316" }} transition={{ duration: 0.2 }}>
-                    <a
-                      href={link.href}
-                      className="text-[#CBD5E1] hover:text-[#F97316] transition-colors text-sm"
-                    >
-                      {link.name}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </nav>
-          </motion.div>
-
-          {/* Column 3: Services */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-white font-bold text-lg mb-5">Our Services</h2>
-            <nav aria-label="Services navigation">
-              <ul className="space-y-3">
-                {footerServices.map((service, i) => (
-                  <motion.li
-                    key={i}
-                    className="flex items-center gap-2 text-[#CBD5E1] text-sm"
-                    whileHover={{ x: 5, color: "#F97316" }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {service.icon}
-                    <a
-                      href={service.href}
-                      className="hover:text-[#F97316] transition-colors"
-                    >
-                      {service.name}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </nav>
-          </motion.div>
-
-          {/* Column 4: Contact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-white font-bold text-lg mb-5">Contact RJ TechForce</h2>
-            <address className="not-italic">
-              <ul className="space-y-3">
-                {contactInfo.map((item, i) => (
-                  <motion.li
-                    key={i}
-                    className="flex items-center gap-2 text-[#CBD5E1] text-sm"
-                    whileHover={{ x: 5, color: "#F97316" }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {item.icon}
-                    <a
-                      href={item.href}
-                      target={item.href.startsWith("http") ? "_blank" : "_self"}
-                      rel="noopener noreferrer"
-                      aria-label={item.label}
-                      className="hover:text-[#F97316] transition-colors"
-                    >
-                      {item.value}
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </address>
-
-            <div className="flex gap-3 mt-8 flex-wrap">
-              {socialLinks.map((social, i) => (
-                <motion.a
-                  key={i}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`RJ TechForce on ${social.name}`}
-                  className="w-10 h-10 rounded-full bg-[#0F172A] border border-white/10 flex items-center justify-center text-white/60 hover:text-[#F97316] hover:border-[#F97316] transition-all duration-300 shadow-lg"
-                  whileHover={{ scale: 1.1, y: -3 }}
-                >
-                  {social.icon}
-                </motion.a>
+          <nav aria-label="Company">
+            <FooterHeading>Company</FooterHeading>
+            <ul className="space-y-3">
+              {companyLinks.map((link) => (
+                <li key={link.to}><Link to={link.to} className="text-sm text-[#CBD5E1] hover:text-[#F97316] transition-colors">{link.label}</Link></li>
               ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Tech Stack Strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          viewport={{ once: true }}
-          className="flex flex-wrap justify-center gap-x-4 gap-y-3 py-8 border-b border-white/10"
-          aria-label="Technologies used by RJ TechForce"
-        >
-          {techStackBadges.map((tech, i) => (
-            <span
-              key={i}
-              className="px-3 py-1 bg-white/5 border border-white/10 text-white/70 text-[10px] font-bold uppercase rounded-md tracking-wider"
-            >
-              {tech}
-            </span>
-          ))}
-        </motion.div>
-
-        {/* SEO Internal Links */}
-        <div className="py-6 border-b border-white/5">
-          <nav aria-label="SEO site links" className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {[
-              { label: "Web Development Services", href: "/#services" },
-              { label: "React Development", href: "/#services" },
-              { label: "UI/UX Design", href: "/#services" },
-              { label: "Portfolio", href: "/#projects" },
-              { label: "Web Development Blog", href: "/#blog" },
-              { label: "About RJ TechForce", href: "/#about-us" },
-              { label: "Contact Us", href: "/#contact" },
-            ].map((link, i) => (
-              <a
-                key={i}
-                href={link.href}
-                className="text-[#94A3B8] hover:text-[#F97316] text-[11px] transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            </ul>
           </nav>
+
+          <nav aria-label="Services">
+            <FooterHeading>Services</FooterHeading>
+            <ul className="space-y-3">
+              {services.map((service) => (
+                <li key={service.slug}><Link to={`/services/${service.slug}`} className="text-sm text-[#CBD5E1] hover:text-[#F97316] transition-colors">{service.title}</Link></li>
+              ))}
+            </ul>
+          </nav>
+
+          <div>
+            <FooterHeading>Contact</FooterHeading>
+            <address className="not-italic space-y-3 text-sm">
+              {whatsapp && (
+                <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-[#CBD5E1] hover:text-[#F97316] transition-colors">
+                  <MessageSquare size={16} aria-hidden="true" className="text-[#F97316]" /> WhatsApp {settings.phone}
+                </a>
+              )}
+              {settings.email && (
+                <a href={`mailto:${settings.email}`} className="flex items-center gap-3 text-[#CBD5E1] hover:text-[#F97316] transition-colors break-all">
+                  <Mail size={16} aria-hidden="true" className="text-[#F97316] shrink-0" /> {settings.email}
+                </a>
+              )}
+              {settings.locality && (
+                <a href={mapUrl(settings)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-[#CBD5E1] hover:text-[#F97316] transition-colors">
+                  <MapPin size={16} aria-hidden="true" className="text-[#F97316]" /> {locationDisplay(settings)}
+                </a>
+              )}
+            </address>
+            {settings.socialLinks?.length > 0 && (
+              <ul className="flex gap-3 mt-6">
+                {settings.socialLinks.map((link) => {
+                  const SocialIcon = socialIcons[link.name] || Globe;
+                  return (
+                    <li key={link.url}>
+                      <a href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`RJ TechForce on ${link.name}`} className="w-10 h-10 rounded-full border border-[var(--rj-panel-border)] bg-[var(--rj-panel)] flex items-center justify-center text-white/70 hover:text-[#F97316] hover:border-[#F97316] transition-colors">
+                        <SocialIcon size={18} aria-hidden="true" />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-white/50 text-xs gap-4">
-          <p>© 2026 RJ TechForce. All Rights Reserved.</p>
-          <p className="text-center">
-            Professional Web Development &amp; Digital Solutions |{" "}
-            <a href="/#contact" className="hover:text-[#F97316] transition-colors">Get a Free Quote</a>
-          </p>
-          <p>Built with React.js &amp; Tailwind CSS</p>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8 text-sm text-[#94A3B8]">
+          <p>© {new Date().getFullYear()} {settings.companyName}. All rights reserved.</p>
+          <ul className="flex flex-wrap gap-6">
+            <li><Link to="/privacy-policy" className="hover:text-[#F97316] transition-colors">Privacy Policy</Link></li>
+            <li><Link to="/terms-and-conditions" className="hover:text-[#F97316] transition-colors">Terms & Conditions</Link></li>
+          </ul>
         </div>
       </div>
 
-      {/* Scroll to Top Button */}
       <AnimatePresence>
-        {showScrollToTop && (
+        {showTop && (
           <motion.button
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
-            onClick={scrollToTop}
-            aria-label="Scroll to top of page"
-            className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-[#F97316] text-white flex items-center justify-center shadow-lg hover:bg-[#EA580C] transition-colors"
+            type="button"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Scroll to top"
+            className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-[#F97316] text-white flex items-center justify-center shadow-lg hover:bg-[#EA580C] transition-colors"
           >
-            <ArrowUp size={24} aria-hidden="true" />
+            <ArrowUp size={22} aria-hidden="true" />
           </motion.button>
         )}
       </AnimatePresence>

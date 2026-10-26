@@ -3,13 +3,17 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from "@tailwindcss/vite";
 import { normalizeSiteUrl } from './src/config/site.js'
-import { pages, replaceSeoBlock, buildRobotsTxt, buildSitemapXml } from './src/seo/head.js'
+import { normalizeSiteData } from './src/utils/siteData.js'
+import { resolveRoute } from './src/seo/routes.js'
+import { buildHeadTags, buildRobotsTxt, replaceSeoBlock } from './src/seo/head.js'
 
-// Generates the homepage <head>, robots.txt and sitemap.xml from src/config/site.js
+// Fills the <head> SEO block (homepage defaults; scripts/prerender.js writes per-page
+// heads) and emits robots.txt. sitemap.xml is written by the prerender step.
 const seo = ({ siteUrl, isSsrBuild }) => ({
   name: 'rj-seo',
   transformIndexHtml(html) {
-    return replaceSeoBlock(html, pages.home, siteUrl);
+    const data = normalizeSiteData(null)
+    return replaceSeoBlock(html, buildHeadTags(resolveRoute('/', data), data, siteUrl));
   },
   configureServer(server) {
     server.middlewares.use((req, res, next) => {
@@ -17,19 +21,12 @@ const seo = ({ siteUrl, isSsrBuild }) => ({
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
         return res.end(buildRobotsTxt(siteUrl));
       }
-      if (req.url === '/sitemap.xml' && siteUrl) {
-        res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-        return res.end(buildSitemapXml(siteUrl));
-      }
       next();
     });
   },
   generateBundle() {
     if (isSsrBuild) return;
     this.emitFile({ type: 'asset', fileName: 'robots.txt', source: buildRobotsTxt(siteUrl) });
-    if (siteUrl) {
-      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: buildSitemapXml(siteUrl) });
-    }
   },
 });
 

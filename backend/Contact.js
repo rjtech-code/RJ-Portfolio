@@ -18,6 +18,9 @@ const contactSchema = new mongoose.Schema({
         enum: INQUIRY_STATUSES,
         default: 'New'
     },
+    // CRM follow-up (admin only)
+    notes: { type: String, default: '' },
+    followUpDate: { type: Date, default: null },
     createdAt: { 
         type: Date, 
         default: Date.now 

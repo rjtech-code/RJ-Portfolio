@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { 
-  Code2, Database, Layout, Server, Settings, Globe, 
+  Database, Layout, Server, Settings, Globe, 
   Cpu, Cloud, Zap, Package, GitBranch
 } from 'lucide-react';
 
@@ -72,42 +72,6 @@ const TechCard = ({ name, category }) => (
     </div>
   </motion.div>
 );
-
-const ConnectionLine = ({ direction }) => {
-  const pathVariants = {
-    initial: { pathLength: 0 },
-    animate: { pathLength: 1, transition: { duration: 1.5, ease: "easeInOut" } }
-  };
-
-  return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" preserveAspectRatio="none">
-      <motion.path
-        d={direction}
-        stroke="url(#line-gradient)"
-        strokeWidth="1"
-        fill="none"
-        variants={pathVariants}
-        initial="initial"
-        whileInView="animate"
-        viewport={{ once: true }}
-      />
-      <motion.circle r="2" fill="#F97316">
-        <motion.animateMotion
-          dur="3s"
-          repeatCount="indefinite"
-          path={direction}
-        />
-      </motion.circle>
-      <defs>
-        <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#F97316" stopOpacity="0" />
-          <stop offset="50%" stopColor="#F97316" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#F97316" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-};
 
 const TechCluster = ({ cluster, idx, x, y }) => {
   const isLeft = cluster.id.includes('left') || idx % 2 === 0;
