@@ -14,7 +14,7 @@ export default function LegalLayout({ pageKey, title }) {
 
   return (
     <>
-      <PageHero eyebrow="Legal" title={heading || title} intro={`Last updated ${formatDate(doc.updated)}. This document is a draft and must be reviewed before it is relied on.`} />
+      <PageHero eyebrow="Legal" title={heading || title} intro={`Last updated ${formatDate(doc.updated)}.`} />
       <Container className="py-16 grid lg:grid-cols-[240px_1fr] gap-12">
         <nav aria-label="On this page" className="hidden lg:block">
           <ol className="sticky top-28 space-y-1 text-sm">

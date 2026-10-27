@@ -169,13 +169,48 @@ export const buildRobotsTxt = (siteUrl) =>
     "",
   ].join("\n");
 
+// Sitemap priority / change frequency per kind of page
+const SITEMAP_RULES = {
+  home: ["weekly", "1.0"],
+  services: ["monthly", "0.9"],
+  service: ["monthly", "0.8"],
+  portfolio: ["weekly", "0.8"],
+  blog: ["weekly", "0.8"],
+  contact: ["yearly", "0.8"],
+  "portfolio-item": ["monthly", "0.6"],
+  "blog-post": ["monthly", "0.6"],
+  legal: ["yearly", "0.3"],
+  default: ["monthly", "0.7"],
+};
+
+export const sitemapRule = (meta) => {
+  if (meta.kind === "portfolio") return SITEMAP_RULES["portfolio-item"];
+  if (meta.kind === "blog") return SITEMAP_RULES["blog-post"];
+  if (meta.key?.startsWith("service-")) return SITEMAP_RULES.service;
+  if (meta.key === "privacy-policy" || meta.key === "terms-and-conditions") return SITEMAP_RULES.legal;
+  return SITEMAP_RULES[meta.key] || SITEMAP_RULES.default;
+};
+
+// entries: { path, lastmod, changefreq, priority, images: [{ loc, title }] }
 export const buildSitemapXml = (siteUrl, entries) =>
   [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...entries.map(
-      ({ path, lastmod }) =>
-        `  <url>\n    <loc>${escapeHtml(absolute(siteUrl, path))}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ""}\n  </url>`
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
+    ...entries.map(({ path, lastmod, changefreq, priority, images = [] }) =>
+      [
+        "  <url>",
+        `    <loc>${escapeHtml(absolute(siteUrl, path))}</loc>`,
+        lastmod && `    <lastmod>${lastmod}</lastmod>`,
+        changefreq && `    <changefreq>${changefreq}</changefreq>`,
+        priority && `    <priority>${priority}</priority>`,
+        ...images.map(
+          (image) =>
+            `    <image:image>\n      <image:loc>${escapeHtml(image.loc.startsWith("http") ? image.loc : absolute(siteUrl, image.loc))}</image:loc>${image.title ? `\n      <image:title>${escapeHtml(image.title)}</image:title>` : ""}\n    </image:image>`
+        ),
+        "  </url>",
+      ]
+        .filter(Boolean)
+        .join("\n")
     ),
     "</urlset>",
     "",

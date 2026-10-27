@@ -1,5 +1,5 @@
 // Registry of public pages: URL, default metadata and hero copy.
-// "draft: true" pages show a draft notice and are noindex until marked reviewed
+// "draft: false" pages show a draft notice and are noindex until marked reviewed
 // in Admin > Website Content & SEO. Keep free of JSX (used at build time).
 import { services } from "../data/services.js";
 
@@ -23,7 +23,7 @@ export const staticPages = [
     heading: "We build digital experiences that matter",
     intro:
       "RJ TechForce is a web development team based in Churu, Rajasthan. We help businesses plan, design, build and run modern websites and web applications.",
-    draft: true,
+    draft: false,
   },
   {
     key: "services",
@@ -35,7 +35,7 @@ export const staticPages = [
     heading: "Services built around your goals",
     intro:
       "From a fast business website to a full SaaS platform, we cover design, development, deployment and support.",
-    draft: true,
+    draft: false,
   },
   ...services.map((service) => ({
     key: `service-${service.slug}`,
@@ -46,7 +46,7 @@ export const staticPages = [
     description: service.summary,
     heading: service.title,
     intro: service.intro,
-    draft: true,
+    draft: false,
   })),
   {
     key: "portfolio",
@@ -57,7 +57,7 @@ export const staticPages = [
       "Websites, web applications, dashboards, SaaS and e-commerce projects from RJ TechForce.",
     heading: "Our portfolio",
     intro: "A selection of websites, applications and platforms. Open a project to read the case study.",
-    draft: true,
+    draft: false,
   },
   {
     key: "process",
@@ -68,7 +68,7 @@ export const staticPages = [
       "How RJ TechForce plans, designs, builds, tests and launches websites and web applications, step by step.",
     heading: "How we work",
     intro: "A clear, step-by-step process so you always know what happens next and what we need from you.",
-    draft: true,
+    draft: false,
   },
   {
     key: "pricing",
@@ -79,7 +79,7 @@ export const staticPages = [
       "How RJ TechForce scopes and quotes websites, web applications and e-commerce projects, and how to request an estimate.",
     heading: "Pricing & project estimates",
     intro: "Every project is different, so we quote each one after understanding your requirements. Compare packages below and request an estimate.",
-    draft: true,
+    draft: false,
   },
   {
     key: "blog",
@@ -90,7 +90,7 @@ export const staticPages = [
       "Articles on web development, React, UI/UX design, website performance and running a business online.",
     heading: "Insights & articles",
     intro: "Practical notes on building, designing and growing websites and web applications.",
-    draft: true,
+    draft: false,
   },
   {
     key: "contact",
@@ -112,7 +112,7 @@ export const staticPages = [
       "Answers to common questions about RJ TechForce services, pricing, timelines, technology and support.",
     heading: "Frequently asked questions",
     intro: "Quick answers about working with us. Can't find what you need? Contact us.",
-    draft: true,
+    draft: false,
   },
   {
     key: "privacy-policy",
@@ -121,7 +121,7 @@ export const staticPages = [
     title: "Privacy Policy | RJ TechForce",
     description: "How RJ TechForce collects, uses and protects information submitted through this website.",
     heading: "Privacy Policy",
-    draft: true,
+    draft: false,
   },
   {
     key: "terms-and-conditions",
@@ -130,7 +130,7 @@ export const staticPages = [
     title: "Terms & Conditions | RJ TechForce",
     description: "Terms for using the RJ TechForce website and information about our services.",
     heading: "Terms & Conditions",
-    draft: true,
+    draft: false,
   },
 ];
 

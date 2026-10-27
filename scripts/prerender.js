@@ -7,10 +7,10 @@ import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { loadEnv } from 'vite'
 import { adminShellPage, notFoundPage } from '../src/config/pages.js'
-import { normalizeSiteUrl } from '../src/config/site.js'
+import { brand, normalizeSiteUrl } from '../src/config/site.js'
 import { normalizeSiteData } from '../src/utils/siteData.js'
 import { resolveRoute, publicPaths } from '../src/seo/routes.js'
-import { buildHeadTags, buildSitemapXml, replaceSeoBlock } from '../src/seo/head.js'
+import { buildHeadTags, buildSitemapXml, replaceSeoBlock, sitemapRule } from '../src/seo/head.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const distDir = path.join(root, 'dist')
@@ -52,6 +52,7 @@ await fs.writeFile(path.join(distDir, '404.html'), replaceSeoBlock(template, bui
 
 const { render } = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href)
 const sitemap = []
+const buildDate = new Date().toISOString()
 let count = 0
 
 for (const routePath of publicPaths(baseData)) {
@@ -87,7 +88,19 @@ for (const routePath of publicPaths(baseData)) {
 
   if (!meta.noIndex) {
     const item = meta.item
-    sitemap.push({ path: routePath, lastmod: item?.updatedAt ? item.updatedAt.slice(0, 10) : undefined })
+    const [changefreq, priority] = sitemapRule(meta)
+    const images = []
+    if (meta.key === 'home') images.push({ loc: brand.ogImagePath, title: 'RJ TechForce' })
+    if (item?.image) images.push({ loc: item.image, title: item.imageAlt || item.title })
+    if (item?.coverImage) images.push({ loc: item.coverImage, title: item.title })
+    sitemap.push({
+      path: routePath,
+      // Content items use their real update date; static pages use the build date
+      lastmod: (item?.updatedAt || item?.publishedAt || buildDate).slice(0, 10),
+      changefreq,
+      priority,
+      images,
+    })
   }
 }
 

@@ -1,7 +1,7 @@
 // Sample content migrated from the original single-page site.
 // No stock photos: cards render code-made cover illustrations when an item has no image.
-// Everything here is flagged isSample: shown with a "Sample" label, never indexed,
-// and testimonials stay unpublished until the owner confirms consent.
+// Portfolio items and posts were approved by the owner (Oct 2026) and are published normally.
+// Testimonials stay unpublished (isSample) until the client's consent is recorded in the admin.
 export const samplePortfolio = [
     {
         title: 'Face Recognition Attendance System',
@@ -86,7 +86,7 @@ export const samplePortfolio = [
         technologies: ['React', 'Node.js', 'MQTT', 'PostgreSQL'],
         highlights: ['IoT integration', 'Energy consumption charts', 'Custom scene builder'],
     },
-].map((item, index) => ({ ...item, status: 'published', isSample: true, sortOrder: index, publishedAt: new Date() }));
+].map((item, index) => ({ ...item, status: 'published', isSample: false, sortOrder: index, publishedAt: new Date() }));
 
 export const samplePosts = [
     {
@@ -137,7 +137,7 @@ export const samplePosts = [
         tags: ['Responsive Design', 'Mobile First'],
         content: 'Google uses mobile-first indexing, so the mobile version of your site is what search engines primarily evaluate.\n\nA mobile-first approach ensures your website works well on every screen size.',
     },
-].map((post) => ({ ...post, author: 'RJ TechForce', status: 'published', isSample: true, publishedAt: new Date() }));
+].map((post) => ({ ...post, author: 'RJ TechForce', status: 'published', isSample: false, publishedAt: new Date() }));
 
 // Testimonials from the original site: authenticity unconfirmed, so they stay unpublished
 export const sampleTestimonials = [

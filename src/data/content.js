@@ -1,6 +1,5 @@
-// Draft page content (About, Process, Pricing, FAQ, legal pages).
-// Pages using this content are labelled "draft" and noindex until the owner marks
-// them reviewed in Admin > Website Content & SEO. Keep free of JSX.
+// Page content (About, Process, Pricing, FAQ, legal pages), approved by the owner (Oct 2026).
+// Keep free of JSX.
 
 export const about = {
   mission:
@@ -218,7 +217,7 @@ export const faqGroups = [
   },
 ];
 
-// Templates only: must be reviewed by the owner (and ideally a legal professional) before publishing.
+// Legal pages approved for publication by the owner (Oct 2026). Have a legal professional review them when possible.
 export const legal = {
   "privacy-policy": {
     updated: "2026-10-26",
