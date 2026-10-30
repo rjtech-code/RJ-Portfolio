@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './db.js';
@@ -26,6 +27,20 @@ app.use((req, res, next) => {
     res.set('X-Robots-Tag', 'noindex, nofollow');
     res.set('X-Content-Type-Options', 'nosniff');
     next();
+});
+
+// Lightweight health checks for hosting-platform monitoring.
+// Liveness confirms the Node process can answer HTTP; readiness also requires MongoDB.
+app.get('/healthz', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
+app.get('/readyz', (req, res) => {
+    const databaseReady = mongoose.connection.readyState === 1;
+    res.status(databaseReady ? 200 : 503).json({
+        status: databaseReady ? 'ready' : 'not_ready',
+        database: databaseReady ? 'connected' : 'disconnected',
+    });
 });
 
 // Restrict cross-origin requests to the exact origins listed in FRONTEND_URL
