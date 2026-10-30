@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './db.js';
 import contactRoutes from './contactRoutes.js';
-import { buildCorsOptions } from './corsOptions.js';
 import { createAdminToken, isAuthConfigured, safeEqual } from './auth.js';
 import rateLimit from './rateLimit.js';
 import adminRoutes from './adminRoutes.js';
@@ -29,8 +28,55 @@ app.use((req, res, next) => {
     next();
 });
 
-// Restrict cross-origin requests to the exact origins listed in FRONTEND_URL
-const { options: corsOptions } = buildCorsOptions();
+// Read allowed frontend origins directly from the backend environment.
+// Supports one URL or a comma-separated list, e.g.
+// FRONTEND_URL=https://dev.vultusgo.in,https://your-production-domain.com
+const allowedFrontendOrigins = new Set(
+    (process.env.FRONTEND_URL || '')
+        .split(',')
+        .map((value) => {
+            const candidate = value.trim();
+            if (!candidate) return null;
+
+            try {
+                const url = new URL(candidate);
+                if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+                return url.origin;
+            } catch {
+                console.warn('[CORS] Ignoring invalid FRONTEND_URL entry.');
+                return null;
+            }
+        })
+        .filter(Boolean)
+);
+
+// Local development origins are allowed only outside production when FRONTEND_URL is empty.
+if (allowedFrontendOrigins.size === 0 && process.env.NODE_ENV !== 'production') {
+    [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:4173',
+        'http://127.0.0.1:4173',
+    ].forEach((origin) => allowedFrontendOrigins.add(origin));
+}
+
+if (allowedFrontendOrigins.size === 0 && process.env.NODE_ENV === 'production') {
+    console.error('[CORS] FRONTEND_URL is missing or invalid; browser cross-origin requests will be rejected.');
+}
+
+const corsOptions = {
+    origin(origin, callback) {
+        // Allow server-to-server / health-check requests that do not send an Origin header.
+        if (!origin) return callback(null, true);
+
+        // Exact origin match; never allow arbitrary origins or wildcard access.
+        return callback(null, allowedFrontendOrigins.has(origin));
+    },
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    maxAge: 600,
+};
+
 app.use(cors(corsOptions));
 
 // Lightweight health checks for hosting-platform monitoring.
