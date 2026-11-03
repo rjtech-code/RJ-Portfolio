@@ -273,3 +273,4 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
       </div>
     </Section>
   );
+}
