@@ -14,6 +14,7 @@ const projectSchema = new mongoose.Schema({
     budget: { type: Number, min: 0, default: null },
     serviceType: { type: String, trim: true, default: 'website-development', maxlength: 80 },
     liveUrl: { type: String, trim: true, default: '', maxlength: 500 },
+    description: { type: String, trim: true, default: '', maxlength: 3000 },
     publishToWebsite: { type: Boolean, default: false },
     notes: { type: String, default: '' },
 }, { timestamps: true });
