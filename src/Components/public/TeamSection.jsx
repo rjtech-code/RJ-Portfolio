@@ -64,11 +64,13 @@ export default function TeamSection({ members = [], tone = "dark" }) {
               ×
             </button>
             <div className="h-64 sm:h-72 p-3">
-              <img
-                src={selectedMember.imageUrl}
-                alt={selectedMember.name}
-                className="h-full w-full rounded-xl object-cover"
-              />
+              <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-[#0A1730]">
+                <img
+                  src={selectedMember.imageUrl}
+                  alt={selectedMember.name}
+                  className="h-full w-full rounded-xl object-contain"
+                />
+              </div>
             </div>
             <div className="px-5 pb-6 sm:px-6">
               <h3 id="team-member-name" className="text-xl sm:text-2xl font-bold text-white">{selectedMember.name}</h3>
