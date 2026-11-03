@@ -9,6 +9,7 @@ import { HeroIllustration } from "./Illustrations";
 import { whatsappUrl } from "../../config/site";
 import Spot from "../common/Spot";
 import TechStack from "./TechStack";
+import ProjectShowcase from "./ProjectShowcase";
 
 // Bordered panel with an orange-bulleted list (two-column panels in the reference)
 export const ListPanel = ({ title, items, accent = false }) => (
@@ -46,7 +47,7 @@ export const CardGrid = ({ items, columns = "lg:grid-cols-4", spots }) => (
 export default function ServiceLayout({ slug, illustration = "laptop", children }) {
   const service = getService(slug);
   const { heading, intro } = usePageContent(`service-${slug}`, pageByKey[`service-${slug}`]);
-  const { portfolio, settings } = useSiteData();
+  const { portfolio, projects, settings } = useSiteData();
   const related = portfolio.filter((item) => item.category === service.portfolioCategory).slice(0, 3);
   const otherServices = services.filter((s) => s.slug !== slug).slice(0, 3);
   const whatsapp = whatsappUrl(settings, `Hello RJ TechForce, I'm interested in ${service.title}.`);
@@ -72,6 +73,8 @@ export default function ServiceLayout({ slug, illustration = "laptop", children 
       />
 
       {children}
+
+      <ProjectShowcase projects={projects} mode="sections" serviceType={slug} />
 
       <Section eyebrow="Technologies" title="Tools we use" intro="Languages, libraries and platforms we commonly use for this service." tone="light">
         <TechStack stack={service.stack} />
