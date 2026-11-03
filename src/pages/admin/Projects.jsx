@@ -9,7 +9,7 @@ import { useToast } from "../../hooks/useToast";
 import { services } from "../../data/services";
 
 const STATUSES = ["Planning", "In Progress", "Review", "Completed", "On Hold"];
-const EMPTY = { name: "", clientId: "", clientName: "", status: "Planning", progress: 0, startDate: "", deadline: "", budget: "", serviceType: "website-development", liveUrl: "", description: "", publishToWebsite: true, notes: "" };
+const EMPTY = { name: "", clientId: "", clientName: "", status: "Planning", progress: 0, startDate: "", deadline: "", budget: "", serviceType: "website-development", previewImage: "", liveUrl: "", description: "", publishToWebsite: true, notes: "" };
 
 const validate = (f) => {
   const e = {};
@@ -44,6 +44,7 @@ function ProjectForm({ initial, clients, onCancel, onSubmit }) {
       deadline: form.deadline || null,
       budget: form.budget === "" ? null : Number(form.budget),
       serviceType: form.serviceType,
+      previewImage: form.previewImage.trim(),
       liveUrl: form.liveUrl.trim(),
       description: form.description,
       publishToWebsite: Boolean(form.publishToWebsite),
@@ -58,6 +59,7 @@ function ProjectForm({ initial, clients, onCancel, onSubmit }) {
       <TextInput label="Client name" value={form.clientName} onChange={set("clientName")} disabled={Boolean(form.clientId)} hint={form.clientId ? "Taken from the selected client" : "If the client isn't in Clients yet"} maxLength={150} />
       <SelectInput label="Status" value={form.status} onChange={set("status")} options={STATUSES} />
       <SelectInput label="Project type / service" value={form.serviceType || "website-development"} onChange={set("serviceType")} options={services.map((service) => [service.slug, service.title])} />
+      <TextInput className="sm:col-span-2" label="Preview image URL" type="url" value={form.previewImage || ""} onChange={set("previewImage")} placeholder="https://example.com/project-preview.jpg" hint="Used as the visual fallback when a live preview is unavailable." maxLength={1000} />
       <TextInput className="sm:col-span-2" label="Live website URL" type="url" value={form.liveUrl || ""} onChange={set("liveUrl")} placeholder="https://example.com" hint="Used for the live preview and Go Live button." maxLength={500} />
       <TextArea className="sm:col-span-2" label="Public project description" value={form.description || ""} onChange={set("description")} maxLength={3000} hint="Shown on the public website. Keep private notes in the field below." />
       <label className="sm:col-span-2 flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-[#CBD5E1]"><input type="checkbox" checked={Boolean(form.publishToWebsite)} onChange={(e) => setForm({ ...form, publishToWebsite: e.target.checked })} className="mt-0.5 accent-orange-500" /><span><span className="block font-semibold text-white">Show on public website</span><span className="mt-1 block text-xs text-slate-400">When enabled, this project appears on the Home slider and its matching service page.</span></span></label>
