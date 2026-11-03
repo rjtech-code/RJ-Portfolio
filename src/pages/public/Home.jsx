@@ -8,6 +8,7 @@ import { Container, CtaBanner, Eyebrow, Section, ButtonLink } from "../../Compon
 import Spot from "../../Components/common/Spot";
 import ProjectShowcase from "../../Components/public/ProjectShowcase";
 import { FaqAccordion, StepRow, Testimonials } from "../../Components/public/Blocks";
+import TeamSection from "../../Components/public/TeamSection";
 
 const reasons = [
   { icon: Code, title: "React & full-stack expertise", desc: "Modern frontends with React and reliable backends with Node.js, Express and databases." },
@@ -20,7 +21,7 @@ const TILE_TINTS = ["text-[#F97316] bg-[#F97316]/10", "text-sky-300 bg-sky-400/1
 
 export default function Home() {
   const faqPreview = faqGroups.flatMap((group) => group.items).slice(0, 4);
-  const { projects } = useSiteData();
+  const { projects, team } = useSiteData();
 
   return (
     <>
@@ -80,6 +81,7 @@ export default function Home() {
       </Section>
 
       <ProjectShowcase projects={projects} />
+      <TeamSection members={team} />
 
       {/* Why choose */}
       <Section eyebrow="Why RJ TechForce" title="Why businesses work with us" align="center">
