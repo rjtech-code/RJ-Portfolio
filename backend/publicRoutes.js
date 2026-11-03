@@ -3,6 +3,7 @@ import PortfolioItem from './models/PortfolioItem.js';
 import Project from './models/Project.js';
 import BlogPost from './models/BlogPost.js';
 import Testimonial from './models/Testimonial.js';
+import TeamMember from './models/TeamMember.js';
 import PageContent from './models/PageContent.js';
 import { getSiteSettings } from './models/Setting.js';
 
@@ -17,16 +18,17 @@ const cache = (res) => res.set('Cache-Control', 'public, max-age=60');
 
 router.get('/bootstrap', async (req, res) => {
     try {
-        const [settings, pages, portfolio, posts, testimonials, projects] = await Promise.all([
+        const [settings, pages, portfolio, posts, testimonials, projects, team] = await Promise.all([
             getSiteSettings(),
             PageContent.find().select('-_id key metaTitle metaDescription heading intro reviewed').lean(),
             PortfolioItem.find({ status: 'published' }).sort({ sortOrder: 1, publishedAt: -1 }).select(`-_id ${PORTFOLIO_SUMMARY}`).lean(),
             BlogPost.find({ status: 'published' }).sort({ publishedAt: -1 }).select(`-_id ${POST_SUMMARY}`).lean(),
             Testimonial.find({ status: 'published', consent: true, isSample: false }).sort({ updatedAt: -1 }).select('-_id authorName authorRole quote').lean(),
             Project.find({ publishToWebsite: true }).sort({ updatedAt: -1 }).select(PROJECT_SUMMARY).lean(),
+            TeamMember.find({ status: 'published' }).sort({ sortOrder: 1, createdAt: 1 }).select('-__v -createdAt -updatedAt').lean(),
         ]);
         delete settings.updatedAt;
-        cache(res).json({ settings, pages, portfolio, posts, testimonials, projects });
+        cache(res).json({ settings, pages, portfolio, posts, testimonials, projects, team });
     } catch (error) {
         console.error(`[PUBLIC bootstrap] Error: ${error.name}`);
         res.status(500).json({ message: 'Server Error' });
