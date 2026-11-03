@@ -202,8 +202,8 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
           <button type="button" aria-label="Previous project" onClick={() => setActive((n) => (n - 1 + filtered.length) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowLeft size={18} /></button>
           <button type="button" aria-label="Next project" onClick={() => setActive((n) => (n + 1) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowRight size={18} /></button>
         </div>
-        <div ref={trackRef} className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]" aria-label="Project slider">
-          {filtered.map((project, index) => <div key={project._id || project.name} data-project-index={index} className="w-[300px] min-w-[300px] max-w-[300px] snap-start"><ProjectCard project={project} compact /></div>)}
+        <div ref={trackRef} className="flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]" style={{ perspective: "1400px" }} aria-label="Project slider">
+          {filtered.map((project, index) => <div key={project._id || project.name} data-project-index={index} className="w-[500px] min-w-[500px] max-w-[500px] snap-start transition-transform duration-500" style={{ transform: index === active ? "rotateY(0deg) translateZ(0)" : index < active ? "rotateY(3deg) translateZ(-12px)" : "rotateY(-3deg) translateZ(-12px)", transformOrigin: index < active ? "right center" : "left center" }}><ProjectCard project={project} compact /></div>)}
         </div>
       </div>
     </Section>
