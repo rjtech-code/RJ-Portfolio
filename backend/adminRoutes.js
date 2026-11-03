@@ -9,6 +9,7 @@ import BlogPost from './models/BlogPost.js';
 import Client from './models/Client.js';
 import Testimonial from './models/Testimonial.js';
 import PageContent from './models/PageContent.js';
+import TeamMember from './models/TeamMember.js';
 import Setting, { getSiteSettings } from './models/Setting.js';
 
 const router = express.Router();
@@ -114,6 +115,19 @@ router.use('/testimonials', crudRouter(Testimonial, {
         if (!t.consent) return 'Confirm the client agreed to publication before publishing.';
         if (t.isSample) return 'Sample testimonials cannot be published.';
         return null;
+    },
+}));
+
+router.use('/team', crudRouter(TeamMember, {
+    sort: { sortOrder: 1, createdAt: 1 },
+    spec: {
+        name: { type: 'string', required: true, max: 120, label: 'Name' },
+        role: { type: 'string', required: true, max: 120, label: 'Designation' },
+        bio: { type: 'text', max: 1000, label: 'Bio' },
+        imageUrl: { type: 'string', required: true, max: 1000, pattern: URL_PATTERN, label: 'Image URL' },
+        linkedin: { type: 'string', max: 500, pattern: URL_PATTERN, label: 'LinkedIn URL' },
+        sortOrder: { type: 'number', min: -1000, max: 1000, label: 'Display order' },
+        status: { ...STATUS, label: 'Status' },
     },
 }));
 
