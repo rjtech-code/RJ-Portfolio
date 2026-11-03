@@ -34,7 +34,7 @@ function EnquiryDetails({ enquiry, onClose, onSaved, onDelete }) {
   const [form, setForm] = useState({ status: enquiry.status, notes: enquiry.notes || "", followUpDate: toDateInput(enquiry.followUpDate) });
   const [saving, setSaving] = useState(false);
   const dirty = form.status !== enquiry.status || form.notes !== (enquiry.notes || "") || form.followUpDate !== toDateInput(enquiry.followUpDate);
-  const phone = enquiry.phone.replace(/[^\d+]/g, "");
+  const phone = (enquiry.phone || "").replace(/[^\d+]/g, "");
 
   const save = async () => {
     setSaving(true);
@@ -131,6 +131,7 @@ export default function Enquiries() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return items.filter((i) =>
+      (viewType === null || (i.inquiryType || "project_contact") === viewType) &&
       (statusFilter === "All" || i.status === statusFilter) &&
       (typeFilter === "All" || i.projectType === typeFilter) &&
       (!q || [i.fullName, i.email, i.phone, i.projectDetails].some((v) => v?.toLowerCase().includes(q)))
