@@ -4,12 +4,13 @@ import { pageByKey } from "../../config/pages";
 import { usePageContent, useSiteData } from "../../hooks/useSiteData";
 import { CtaBanner, EmptyState, PageHero, Section, SkeletonGrid } from "../../Components/common/primitives";
 import { ProjectCard } from "../../Components/public/Cards";
+import TeamSection from "../../Components/public/TeamSection";
 
 const ALL = "All";
 
 export default function Portfolio() {
   const { heading, intro } = usePageContent("portfolio", pageByKey.portfolio);
-  const { portfolio, status } = useSiteData();
+  const { portfolio, status, team } = useSiteData();
   const [filter, setFilter] = useState(ALL);
 
   // Only show categories that have published projects
@@ -60,6 +61,8 @@ export default function Portfolio() {
           </ul>
         )}
       </Section>
+
+      <TeamSection members={team} />
 
       <CtaBanner title="Want results like these?" secondary={{ to: "/services", label: "Explore services" }} />
     </>
