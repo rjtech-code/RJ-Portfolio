@@ -60,7 +60,7 @@ function ProjectCard({ project }) {
           </div>
           <h3 className="text-xl font-extrabold leading-tight text-white">{project.name}</h3>
           {project.clientName && <p className="mt-1 text-xs text-slate-400">For {project.clientName}</p>}
-          {project.notes && <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-slate-300">{project.notes}</p>}
+          {project.description && <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-slate-300">{project.description}</p>}
           {project.budget != null && <p className="mt-4 text-sm font-semibold text-white">Project value: ₹{Number(project.budget).toLocaleString("en-IN")}</p>}
           <div className="mt-auto flex flex-wrap gap-3 pt-5">
             {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-[#F97316] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-orange-500">Go Live <ExternalLink size={14} /></a>}
