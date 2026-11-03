@@ -1,5 +1,3 @@
-import { Linkedin, UsersRound } from "lucide-react";
-
 export default function TeamSection({ members = [], tone = "dark" }) {
   if (!members.length) return null;
   return (
@@ -20,7 +18,7 @@ export default function TeamSection({ members = [], tone = "dark" }) {
                 <h3 className="font-bold text-white">{member.name}</h3>
                 <p className="text-sm text-[#F97316] mt-1">{member.role}</p>
                 {member.bio && <p className="text-xs leading-relaxed text-[#94A3B8] mt-3">{member.bio}</p>}
-                {member.linkedin && <a href={member.linkedin} target="_blank" rel="noreferrer" aria-label={`${member.name} on LinkedIn`} className="inline-flex mt-3 text-[#94A3B8] hover:text-[#F97316]"><Linkedin size={17}/></a>}
+                {member.linkedin && <a href={member.linkedin} target="_blank" rel="noreferrer" aria-label={`${member.name} on LinkedIn`} className="inline-flex mt-3 text-[#94A3B8] hover:text-[#F97316]"><span className="text-xs font-semibold">in</span></a>}
               </div>
             </li>
           ))}
