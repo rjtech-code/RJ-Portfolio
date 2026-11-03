@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
-  ExternalLink, FolderKanban, Image, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Settings, SlidersHorizontal, UsersRound, X,
+  ExternalLink, FolderKanban, Image, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Settings, SlidersHorizontal, UsersRound, X, Globe, CalendarCheck, Wrench, Package,
 } from "lucide-react";
 import { adminApi, clearSession, getSession, SESSION_EXPIRED_EVENT } from "../services/adminApi";
 import { ToastProvider } from "../Components/admin/ui";
@@ -9,7 +9,11 @@ import { useNoIndexTitle } from "../hooks/useSeo";
 
 const nav = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, end: true },
-  { to: "/admin/enquiries", label: "Enquiries", icon: Inbox },
+  { to: "/admin/enquiries", label: "All Inquiries", icon: Inbox, end: true },
+  { to: "/admin/enquiries/dev-contact", label: "Dev Website", icon: Globe },
+  { to: "/admin/enquiries/demo-requests", label: "Demo Requests", icon: CalendarCheck },
+  { to: "/admin/enquiries/installation-requests", label: "Installation Requests", icon: Wrench },
+  { to: "/admin/enquiries/product-inquiries", label: "Product Website", icon: Package },
   { to: "/admin/projects", label: "Projects", icon: FolderKanban },
   { to: "/admin/portfolio", label: "Portfolio", icon: Image },
   { to: "/admin/blog", label: "Blog", icon: Newspaper },
