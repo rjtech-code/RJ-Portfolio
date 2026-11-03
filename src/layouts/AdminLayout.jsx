@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
-  ExternalLink, FolderKanban, Image, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Settings, SlidersHorizontal, UsersRound, X, Globe, CalendarCheck, Wrench, Package,
+  ExternalLink, FolderKanban, Image, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Settings, SlidersHorizontal, UsersRound, X, ChevronDown,
 } from "lucide-react";
 import { adminApi, clearSession, getSession, SESSION_EXPIRED_EVENT } from "../services/adminApi";
 import { ToastProvider } from "../Components/admin/ui";
@@ -10,10 +10,6 @@ import { useNoIndexTitle } from "../hooks/useSeo";
 const nav = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, end: true },
   { to: "/admin/enquiries", label: "All Inquiries", icon: Inbox, end: true },
-  { to: "/admin/enquiries/dev-contact", label: "Dev Website", icon: Globe },
-  { to: "/admin/enquiries/demo-requests", label: "Demo Requests", icon: CalendarCheck },
-  { to: "/admin/enquiries/installation-requests", label: "Installation Requests", icon: Wrench },
-  { to: "/admin/enquiries/product-inquiries", label: "Product Website", icon: Package },
   { to: "/admin/projects", label: "Projects", icon: FolderKanban },
   { to: "/admin/portfolio", label: "Portfolio", icon: Image },
   { to: "/admin/blog", label: "Blog", icon: Newspaper },
@@ -22,42 +18,118 @@ const nav = [
   { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
-const Sidebar = ({ onNavigate }) => (
-  <div className="flex flex-col h-full">
-    <Link to="/admin" onClick={onNavigate} className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
-      <img src="/brand/rj-techforce-logo-80.png" alt="" width="36" height="36" className="w-9 h-9 rounded-lg" />
-      <span className="leading-tight">
-        <span className="block font-bold text-white">RJ TechForce</span>
-        <span className="block text-[11px] text-[#94A3B8]">Admin dashboard</span>
-      </span>
-    </Link>
-    <nav aria-label="Admin" className="flex-1 overflow-y-auto px-3 py-4">
-      <ul className="space-y-1">
-        {nav.map(({ to, label, icon: NavIcon, end }) => (
-          <li key={to}>
-            <NavLink
-              to={to}
-              end={end}
-              onClick={onNavigate}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive ? "bg-[#F97316]/15 text-[#FDBA74] border border-[#F97316]/30" : "text-[#CBD5E1] hover:bg-white/5 hover:text-white border border-transparent"
-                }`
-              }
-            >
-              <NavIcon size={18} aria-hidden="true" /> {label}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-    </nav>
-    <div className="p-3 border-t border-white/5">
-      <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#94A3B8] hover:bg-white/5 hover:text-white">
-        <ExternalLink size={16} aria-hidden="true" /> View website
-      </a>
+const enquirySubnav = [
+  { to: "/admin/enquiries/dev-contact", label: "Dev Website" },
+  { to: "/admin/enquiries/demo-requests", label: "Demo Requests" },
+  { to: "/admin/enquiries/installation-requests", label: "Installation Requests" },
+  { to: "/admin/enquiries/product-inquiries", label: "Product Website" },
+];
+
+const Sidebar = ({ onNavigate }) => {
+  const location = useLocation();
+  const isEnquiriesRoute = location.pathname.startsWith("/admin/enquiries");
+  const [manuallyOpen, setManuallyOpen] = useState(false);
+  const [hoverOpen, setHoverOpen] = useState(false);
+  const hoverTimer = useRef(null);
+  const enquiriesOpen = isEnquiriesRoute || manuallyOpen || hoverOpen;
+
+  const startHoverTimer = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setHoverOpen(true), 1000);
+  };
+  const cancelHoverTimer = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = null;
+    setHoverOpen(false);
+  };
+  useEffect(() => () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+  }, []);
+
+  return (
+    <div className="flex flex-col h-full">
+      <Link to="/admin" onClick={onNavigate} className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
+        <img src="/brand/rj-techforce-logo-80.png" alt="" width="36" height="36" className="w-9 h-9 rounded-lg" />
+        <span className="leading-tight">
+          <span className="block font-bold text-white">RJ TechForce</span>
+          <span className="block text-[11px] text-[#94A3B8]">Admin dashboard</span>
+        </span>
+      </Link>
+      <nav aria-label="Admin" className="flex-1 overflow-y-auto px-3 py-4">
+        <ul className="space-y-1">
+          {nav.map(({ to, label, icon: NavIcon, end }) => (
+            <li key={to}>
+              {to === "/admin/enquiries" ? (
+                <div onMouseEnter={startHoverTimer} onMouseLeave={cancelHoverTimer}>
+                  <div className="flex items-center gap-1">
+                    <NavLink
+                      to={to}
+                      end={false}
+                      onClick={onNavigate}
+                      className={({ isActive }) =>
+                        `flex flex-1 items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                          isActive ? "bg-[#F97316]/15 text-[#FDBA74] border border-[#F97316]/30" : "text-[#CBD5E1] hover:bg-white/5 hover:text-white border border-transparent"
+                        }`
+                      }
+                    >
+                      <NavIcon size={18} aria-hidden="true" /> {label}
+                    </NavLink>
+                    <button
+                      type="button"
+                      onClick={() => setManuallyOpen((open) => !open)}
+                      aria-label={enquiriesOpen ? "Collapse inquiry submenu" : "Expand inquiry submenu"}
+                      aria-expanded={enquiriesOpen}
+                      className="p-2 rounded-lg text-[#CBD5E1] hover:bg-white/5 hover:text-white"
+                    >
+                      <ChevronDown size={16} className={`transition-transform duration-200 ${enquiriesOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                    </button>
+                  </div>
+                  {enquiriesOpen && (
+                    <ul className="ml-5 mt-1 space-y-1 border-l border-white/10 pl-3">
+                      {enquirySubnav.map((item) => (
+                        <li key={item.to}>
+                          <NavLink
+                            to={item.to}
+                            onClick={onNavigate}
+                            className={({ isActive }) =>
+                              `block rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
+                                isActive ? "bg-[#F97316]/15 text-[#FDBA74]" : "text-[#94A3B8] hover:bg-white/5 hover:text-white"
+                              }`
+                            }
+                          >
+                            {item.label}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ) : (
+                <NavLink
+                  to={to}
+                  end={end}
+                  onClick={onNavigate}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive ? "bg-[#F97316]/15 text-[#FDBA74] border border-[#F97316]/30" : "text-[#CBD5E1] hover:bg-white/5 hover:text-white border border-transparent"
+                    }`
+                  }
+                >
+                  <NavIcon size={18} aria-hidden="true" /> {label}
+                </NavLink>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div className="p-3 border-t border-white/5">
+        <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#94A3B8] hover:bg-white/5 hover:text-white">
+          <ExternalLink size={16} aria-hidden="true" /> View website
+        </a>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function AdminLayout() {
   const navigate = useNavigate();
