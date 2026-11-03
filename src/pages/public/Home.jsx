@@ -6,7 +6,7 @@ import { faqGroups, processSteps } from "../../data/content";
 import { useSiteData } from "../../hooks/useSiteData";
 import { Container, CtaBanner, Eyebrow, Section, SkeletonGrid, EmptyState, ButtonLink } from "../../Components/common/primitives";
 import Spot from "../../Components/common/Spot";
-import { ProjectCard } from "../../Components/public/Cards";
+import ProjectShowcase from "../../Components/public/ProjectShowcase";
 import { FaqAccordion, StepRow, Testimonials } from "../../Components/public/Blocks";
 
 const reasons = [
@@ -42,6 +42,7 @@ const FeaturedProjects = () => {
 
 export default function Home() {
   const faqPreview = faqGroups.flatMap((group) => group.items).slice(0, 4);
+  const { projects } = useSiteData();
 
   return (
     <>
@@ -100,7 +101,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <FeaturedProjects />
+      <ProjectShowcase projects={projects} />
 
       {/* Why choose */}
       <Section eyebrow="Why RJ TechForce" title="Why businesses work with us" align="center">
