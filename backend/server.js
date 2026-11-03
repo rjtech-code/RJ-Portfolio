@@ -31,37 +31,38 @@ app.use((req, res, next) => {
 // Read allowed frontend origins directly from the backend environment.
 // Supports one URL or a comma-separated list, e.g.
 // FRONTEND_URL=https://dev.vultusgo.in,https://your-production-domain.com
-const allowedFrontendOrigins = new Set(
-    (process.env.FRONTEND_URL || '')
-        .split(',')
-        .map((value) => {
-            const candidate = value.trim();
-            if (!candidate) return null;
+const DEFAULT_FRONTEND_ORIGINS = [
+    'https://dev.vultusgo.in',
+    'https://vultusgo.in',
+    'https://www.vultusgo.in',
+    'https://vultusgo-product.vercel.app',
+];
 
-            try {
-                const url = new URL(candidate);
-                if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
-                return url.origin;
-            } catch {
-                console.warn('[CORS] Ignoring invalid FRONTEND_URL entry.');
-                return null;
+const allowedFrontendOrigins = new Set(DEFAULT_FRONTEND_ORIGINS);
+
+(process.env.FRONTEND_URL || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .forEach((candidate) => {
+        try {
+            const url = new URL(candidate);
+            if (url.protocol === 'https:' || url.protocol === 'http:') {
+                allowedFrontendOrigins.add(url.origin);
             }
-        })
-        .filter(Boolean)
-);
+        } catch {
+            console.warn('[CORS] Ignoring invalid FRONTEND_URL entry.');
+        }
+    });
 
-// Local development origins are allowed only outside production when FRONTEND_URL is empty.
-if (allowedFrontendOrigins.size === 0 && process.env.NODE_ENV !== 'production') {
+// Local development origins are permitted only outside production.
+if (process.env.NODE_ENV !== 'production') {
     [
         'http://localhost:5173',
         'http://127.0.0.1:5173',
         'http://localhost:4173',
         'http://127.0.0.1:4173',
     ].forEach((origin) => allowedFrontendOrigins.add(origin));
-}
-
-if (allowedFrontendOrigins.size === 0 && process.env.NODE_ENV === 'production') {
-    console.error('[CORS] FRONTEND_URL is missing or invalid; browser cross-origin requests will be rejected.');
 }
 
 const corsOptions = {
