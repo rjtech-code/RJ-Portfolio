@@ -13,6 +13,7 @@ const projectSchema = new mongoose.Schema({
     deadline: { type: Date, default: null },
     budget: { type: Number, min: 0, default: null },
     serviceType: { type: String, trim: true, default: 'website-development', maxlength: 80 },
+    previewImage: { type: String, trim: true, default: '', maxlength: 1000 },
     liveUrl: { type: String, trim: true, default: '', maxlength: 500 },
     description: { type: String, trim: true, default: '', maxlength: 3000 },
     publishToWebsite: { type: Boolean, default: false },
