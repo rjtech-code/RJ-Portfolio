@@ -177,8 +177,13 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
 
   useEffect(() => {
     if (mode !== "slider" || !trackRef.current) return;
-    const node = trackRef.current.querySelector(`[data-project-index="${active}"]`);
-    node?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    const track = trackRef.current;
+    const node = track.querySelector(`[data-project-index="${active}"]`);
+    if (!node) return;
+    track.scrollTo({
+      left: node.offsetLeft - (track.clientWidth - node.clientWidth) / 2,
+      behavior: "smooth",
+    });
   }, [active, mode]);
 
   if (!filtered.length) return null;
@@ -202,8 +207,47 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
           <button type="button" aria-label="Previous project" onClick={() => setActive((n) => (n - 1 + filtered.length) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowLeft size={18} /></button>
           <button type="button" aria-label="Next project" onClick={() => setActive((n) => (n + 1) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowRight size={18} /></button>
         </div>
-        <div ref={trackRef} className="flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]" style={{ perspective: "1400px" }} aria-label="Project slider">
-          {filtered.map((project, index) => <div key={project._id || project.name} data-project-index={index} className="w-[calc(100vw-2rem)] min-w-0 max-w-[500px] snap-start transition-transform duration-500 sm:w-[500px] sm:min-w-[500px]" style={{ transform: index === active ? "rotateY(0deg) translateZ(0)" : index < active ? "rotateY(3deg) translateZ(-12px)" : "rotateY(-3deg) translateZ(-12px)", transformOrigin: index < active ? "right center" : "left center" }}><ProjectCard project={project} compact /></div>)}
+        <div
+          ref={trackRef}
+          onScroll={(event) => {
+            const track = event.currentTarget;
+            const center = track.scrollLeft + track.clientWidth / 2;
+            let closestIndex = 0;
+            let closestDistance = Infinity;
+            track.querySelectorAll("[data-project-index]").forEach((node) => {
+              const nodeCenter = node.offsetLeft + node.offsetWidth / 2;
+              const distance = Math.abs(center - nodeCenter);
+              if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = Number(node.dataset.projectIndex);
+              }
+            });
+            setActive((current) => current === closestIndex ? current : closestIndex);
+          }}
+          className="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto scroll-smooth px-[16.666vw] pb-4 [scrollbar-width:none] sm:gap-5 sm:px-0 sm:pb-3 sm:[scrollbar-width:thin]"
+          style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+          aria-label="Project slider"
+        >
+          {filtered.map((project, index) => {
+            const distance = index - active;
+            const rotation = distance === 0 ? 0 : distance < 0 ? 24 : -24;
+            const depth = distance === 0 ? 0 : -Math.min(Math.abs(distance) * 35, 100);
+            const scale = distance === 0 ? 1 : Math.max(0.78, 0.9 - Math.min(Math.abs(distance) - 1, 3) * 0.04);
+            return (
+              <div
+                key={project._id || project.name}
+                data-project-index={index}
+                className="w-[66.666vw] min-w-[66.666vw] max-w-[500px] snap-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-[500px] sm:min-w-[500px] sm:snap-start"
+                style={{
+                  transform: `rotateY(${rotation}deg) translateZ(${depth}px) scale(${scale})`,
+                  transformOrigin: distance < 0 ? "right center" : "left center",
+                  backfaceVisibility: "hidden",
+                }}
+              >
+                <ProjectCard project={project} compact />
+              </div>
+            );
+          })}
         </div>
       </div>
     </Section>
