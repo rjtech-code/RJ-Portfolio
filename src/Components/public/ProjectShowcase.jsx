@@ -75,8 +75,9 @@ function Preview({ project, compact = false }) {
               width: frameWidth,
               height: frameHeight,
               left: "50%",
-              transform: `translateX(-50%) scale(${scale})`,
+              transform: "translateX(-50%)",
               transformOrigin: "top center",
+              zoom: scale,
               pointerEvents: "auto",
             }}
           />
