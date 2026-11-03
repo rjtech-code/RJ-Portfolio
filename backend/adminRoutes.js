@@ -33,6 +33,7 @@ router.use('/projects', crudRouter(Project, {
         budget: { type: 'number', min: 0, max: 1e10, label: 'Budget' },
         serviceType: { type: 'string', required: true, enum: ['website-development', 'web-application-development', 'react-development', 'ui-ux-design', 'saas-development', 'ecommerce-development'], label: 'Project type / service' },
         liveUrl: { type: 'string', max: 500, pattern: URL_PATTERN, label: 'Live website URL' },
+        description: { type: 'text', max: 3000, label: 'Public project description' },
         publishToWebsite: { type: 'boolean', label: 'Show on public website' },
         notes: { type: 'text', max: 5000, label: 'Notes / project details' },
     },
