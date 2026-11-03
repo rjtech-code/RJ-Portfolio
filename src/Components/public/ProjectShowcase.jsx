@@ -37,11 +37,12 @@ function Preview({ project }) {
           referrerPolicy="strict-origin-when-cross-origin"
           className="h-52 w-full bg-white sm:h-60"
         />
+      ) : project.previewImage ? (
+        <img src={project.previewImage} alt={`${project.name} project preview`} loading="lazy" className="h-52 w-full object-cover sm:h-60" />
       ) : (
         <div className="flex h-52 flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#10264A] to-[#081329] px-6 text-center sm:h-60">
           <Globe2 size={30} className="text-[#F97316]" />
-          <p className="text-sm text-slate-300">Live preview is unavailable for this website.</p>
-          {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer" className="text-sm font-semibold text-[#F97316]">Open website <ExternalLink size={13} className="inline" /></a>}
+          <p className="text-sm text-slate-300">Add a live URL or preview image in the admin panel.</p>
         </div>
       )}
     </div>
@@ -50,6 +51,7 @@ function Preview({ project }) {
 
 function ProjectCard({ project }) {
   const status = groupStatus(project.status);
+  const service = services.find((item) => item.slug === project.serviceType);
   return (
     <article className="flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--rj-panel-border)] bg-[var(--rj-panel)] transition-colors hover:border-[#F97316]/50">
       <div className="grid flex-1 gap-4 p-4 sm:grid-cols-[1.05fr_0.95fr] sm:p-5">
