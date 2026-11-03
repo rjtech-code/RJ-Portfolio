@@ -174,13 +174,18 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
   useEffect(() => {
     if (mode !== "slider" || paused || filtered.length < 2) return undefined;
     const timer = window.setInterval(() => {
-      setActive((current) => current + 1 >= filtered.length * 2 ? filtered.length : current + 1);
+      setActive((current) => current + 1);
     }, 6000);
     return () => window.clearInterval(timer);
   }, [mode, paused, filtered.length]);
 
   useEffect(() => {
-    if (mode !== "slider" || !trackRef.current) return;
+    if (mode !== "slider" || !trackRef.current || filtered.length < 2) return;
+    if (active >= filtered.length * 2) {
+      manualScrollRef.current = true;
+      setActive(filtered.length);
+      return;
+    }
     const track = trackRef.current;
     const node = track.querySelector(`[data-project-index="${active}"]`);
     if (!node) return;
@@ -190,7 +195,7 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
       behavior: manualScrollRef.current ? "auto" : "smooth",
     });
     manualScrollRef.current = false;
-  }, [active, mode]);
+  }, [active, mode, filtered.length]);
 
   if (!filtered.length) return null;
 
