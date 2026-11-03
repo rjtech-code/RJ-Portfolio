@@ -169,13 +169,14 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
   const [paused, setPaused] = useState(false);
   const trackRef = useRef(null);
   const manualScrollRef = useRef(false);
+  const programmaticScrollRef = useRef(false);
 
   useEffect(() => { setActive(filtered.length); }, [serviceType, filtered.length]);
   useEffect(() => {
     if (mode !== "slider" || paused || filtered.length < 2) return undefined;
     const timer = window.setInterval(() => {
       setActive((current) => current + 1);
-    }, 6000);
+    }, 5000);
     return () => window.clearInterval(timer);
   }, [mode, paused, filtered.length]);
 
@@ -190,11 +191,13 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
     const node = track.querySelector(`[data-project-index="${active}"]`);
     if (!node) return;
     const targetLeft = node.offsetLeft - (track.clientWidth - node.clientWidth) / 2;
+    programmaticScrollRef.current = true;
     track.scrollTo({
       left: targetLeft,
       behavior: manualScrollRef.current ? "auto" : "smooth",
     });
     manualScrollRef.current = false;
+    if (track.scrollLeft === targetLeft) programmaticScrollRef.current = false;
   }, [active, mode, filtered.length]);
 
   if (!filtered.length) return null;
@@ -215,13 +218,14 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
     <Section eyebrow="Our work" title="Projects in action" intro="Explore completed work and projects currently in progress.">
       <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false); }}>
         <div className="mb-4 flex justify-end gap-2">
-          <button type="button" aria-label="Previous project" onClick={() => setActive((n) => (n - 1 + filtered.length) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowLeft size={18} /></button>
-          <button type="button" aria-label="Next project" onClick={() => setActive((n) => (n + 1) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowRight size={18} /></button>
+          <button type="button" aria-label="Previous project" onClick={() => setActive((n) => n - 1 < filtered.length ? n - 1 + filtered.length : n - 1)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowLeft size={18} /></button>
+          <button type="button" aria-label="Next project" onClick={() => setActive((n) => n + 1 >= filtered.length * 2 ? filtered.length : n + 1)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowRight size={18} /></button>
         </div>
         <div
           ref={trackRef}
-          onScroll={(event) => {
+          onScrollEnd={(event) => {
             const track = event.currentTarget;
+            programmaticScrollRef.current = false;
             const center = track.scrollLeft + track.clientWidth / 2;
             let closestIndex = active;
             let closestDistance = Infinity;
@@ -233,15 +237,14 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
                 closestIndex = Number(node.dataset.projectIndex);
               }
             });
-            if (closestIndex < filtered.length || closestIndex >= filtered.length * 2) {
-              const equivalentIndex = closestIndex < filtered.length
-                ? closestIndex + filtered.length
-                : closestIndex - filtered.length;
-              manualScrollRef.current = true;
-              setActive(equivalentIndex);
-            } else {
-              setActive((current) => current === closestIndex ? current : closestIndex);
-            }
+            const count = filtered.length;
+            const equivalentIndex = closestIndex < count
+              ? closestIndex + count
+              : closestIndex >= count * 2
+                ? closestIndex - count
+                : closestIndex;
+            if (equivalentIndex !== closestIndex) manualScrollRef.current = true;
+            setActive((current) => current === equivalentIndex ? current : equivalentIndex);
           }}
           className="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto scroll-smooth px-[16.666vw] pb-4 [scrollbar-width:none] sm:gap-5 sm:px-0 sm:pb-3 sm:[scrollbar-width:thin]"
           style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
@@ -257,7 +260,7 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
                 key={project._id || project.name}
                 data-project-index={index}
                 data-real-index={index % filtered.length}
-                className="w-[66.666vw min-w-[66.666vw] max-w-[500px] snap-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-[500px] sm:min-w-[500px] sm:snap-start"
+                className="w-[66.666vw] min-w-[66.666vw] max-w-[500px] snap-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-[500px] sm:min-w-[500px] sm:snap-start"
                 style={{
                   transform: `rotateY(${rotation}deg) translateZ(${depth}px) scale(${scale})`,
                   transformOrigin: distance < 0 ? "right center" : "left center",
