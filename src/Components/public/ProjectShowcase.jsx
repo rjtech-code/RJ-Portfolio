@@ -166,8 +166,13 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
   const filtered = useMemo(() => orderedProjects(projects.filter((p) => !serviceType || p.serviceType === serviceType)), [projects, serviceType]);
   const loopProjects = useMemo(() => [...filtered, ...filtered, ...filtered], [filtered]);
   const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
   const trackRef = useRef(null);
-  const speedRef = useRef(0.35);
+  const speedRef = useRef(0.025);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   useEffect(() => {
     if (mode !== "slider" || filtered.length < 2 || !trackRef.current) return undefined;
@@ -193,7 +198,7 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
       const delta = Math.min(time - lastTime, 40);
       lastTime = time;
 
-      if (!paused && groupWidth > 0) {
+      if (!pausedRef.current && groupWidth > 0) {
         track.scrollLeft += speedRef.current * delta;
         if (track.scrollLeft >= groupWidth * 2) {
           track.scrollLeft -= groupWidth;
@@ -223,7 +228,7 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
       observer.disconnect();
       delete track.dataset.loopReady;
     };
-  }, [mode, filtered.length, paused]);
+  }, [mode, filtered.length]);
   if (!filtered.length) return null;
 
   if (mode === "sections") {
