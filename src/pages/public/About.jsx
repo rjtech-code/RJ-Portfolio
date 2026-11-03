@@ -2,7 +2,7 @@ import { Compass, Eye, HeartHandshake, Workflow } from "lucide-react";
 import Technologies from "../../Components/Technologies";
 import { about } from "../../data/content";
 import { pageByKey } from "../../config/pages";
-import { usePageContent } from "../../hooks/useSiteData";
+import { usePageContent, useSiteData } from "../../hooks/useSiteData";
 import { ButtonLink, CtaBanner, PageHero, Section } from "../../Components/common/primitives";
 import { Icon } from "../../Components/common/Icon";
 import Spot from "../../Components/common/Spot";
@@ -80,19 +80,6 @@ export default function About() {
       </Section>
 
       <TeamSection members={team} tone="light" />
-
-      {/* Team: roles until real profiles are approved */}
-      <Section tone="light" eyebrow="Our team" title="How our team is organised" intro="Specialists who work together on every project.">
-        <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {about.teamAreas.map((area) => (
-            <li key={area.title} className="text-center p-7 rounded-2xl border border-[var(--rj-panel-border)] bg-[var(--rj-panel)]">
-              <div className="mb-5 rounded-xl bg-[var(--rj-navy-950)]/60 border border-white/5"><Spot variant={area.spot} className="w-full h-28" /></div>
-              <h3 className="text-white font-bold mb-2">{area.title}</h3>
-              <p className="text-[#94A3B8] text-sm leading-relaxed">{area.desc}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
 
       {/* Technical capabilities (existing technology ecosystem section) */}
       <Technologies />
