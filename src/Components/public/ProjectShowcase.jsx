@@ -164,14 +164,18 @@ function ProjectCard({ project, compact = false }) {
 
 export default function ProjectShowcase({ projects = [], mode = "slider", serviceType = null }) {
   const filtered = useMemo(() => orderedProjects(projects.filter((p) => !serviceType || p.serviceType === serviceType)), [projects, serviceType]);
-  const [active, setActive] = useState(0);
+  const loopProjects = useMemo(() => [...filtered, ...filtered, ...filtered], [filtered]);
+  const [active, setActive] = useState(filtered.length);
   const [paused, setPaused] = useState(false);
   const trackRef = useRef(null);
+  const manualScrollRef = useRef(false);
 
-  useEffect(() => { setActive(0); }, [serviceType, filtered.length]);
+  useEffect(() => { setActive(filtered.length); }, [serviceType, filtered.length]);
   useEffect(() => {
     if (mode !== "slider" || paused || filtered.length < 2) return undefined;
-    const timer = window.setInterval(() => setActive((current) => (current + 1) % filtered.length), 4200);
+    const timer = window.setInterval(() => {
+      setActive((current) => current + 1 >= filtered.length * 2 ? filtered.length : current + 1);
+    }, 6000);
     return () => window.clearInterval(timer);
   }, [mode, paused, filtered.length]);
 
@@ -180,10 +184,12 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
     const track = trackRef.current;
     const node = track.querySelector(`[data-project-index="${active}"]`);
     if (!node) return;
+    const targetLeft = node.offsetLeft - (track.clientWidth - node.clientWidth) / 2;
     track.scrollTo({
-      left: node.offsetLeft - (track.clientWidth - node.clientWidth) / 2,
-      behavior: "smooth",
+      left: targetLeft,
+      behavior: manualScrollRef.current ? "auto" : "smooth",
     });
+    manualScrollRef.current = false;
   }, [active, mode]);
 
   if (!filtered.length) return null;
@@ -212,7 +218,7 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
           onScroll={(event) => {
             const track = event.currentTarget;
             const center = track.scrollLeft + track.clientWidth / 2;
-            let closestIndex = 0;
+            let closestIndex = active;
             let closestDistance = Infinity;
             track.querySelectorAll("[data-project-index]").forEach((node) => {
               const nodeCenter = node.offsetLeft + node.offsetWidth / 2;
@@ -222,13 +228,21 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
                 closestIndex = Number(node.dataset.projectIndex);
               }
             });
-            setActive((current) => current === closestIndex ? current : closestIndex);
+            if (closestIndex < filtered.length || closestIndex >= filtered.length * 2) {
+              const equivalentIndex = closestIndex < filtered.length
+                ? closestIndex + filtered.length
+                : closestIndex - filtered.length;
+              manualScrollRef.current = true;
+              setActive(equivalentIndex);
+            } else {
+              setActive((current) => current === closestIndex ? current : closestIndex);
+            }
           }}
           className="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto scroll-smooth px-[16.666vw] pb-4 [scrollbar-width:none] sm:gap-5 sm:px-0 sm:pb-3 sm:[scrollbar-width:thin]"
           style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
           aria-label="Project slider"
         >
-          {filtered.map((project, index) => {
+          {loopProjects.map((project, index) => {
             const distance = index - active;
             const rotation = distance === 0 ? 0 : distance < 0 ? 24 : -24;
             const depth = distance === 0 ? 0 : -Math.min(Math.abs(distance) * 35, 100);
@@ -237,7 +251,8 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
               <div
                 key={project._id || project.name}
                 data-project-index={index}
-                className="w-[66.666vw] min-w-[66.666vw] max-w-[500px] snap-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-[500px] sm:min-w-[500px] sm:snap-start"
+                data-real-index={index % filtered.length}
+                className="w-[66.666vw min-w-[66.666vw] max-w-[500px] snap-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-[500px] sm:min-w-[500px] sm:snap-start"
                 style={{
                   transform: `rotateY(${rotation}deg) translateZ(${depth}px) scale(${scale})`,
                   transformOrigin: distance < 0 ? "right center" : "left center",
