@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
-  ExternalLink, FolderKanban, Image, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Settings, SlidersHorizontal, UsersRound, X, ChevronDown,
+  ExternalLink, FolderKanban, Image, Inbox, LayoutDashboard, LogOut, Menu, Newspaper, Settings, SlidersHorizontal, UsersRound, UserRound, X, ChevronDown,
 } from "lucide-react";
 import { adminApi, clearSession, getSession, SESSION_EXPIRED_EVENT } from "../services/adminApi";
 import { ToastProvider } from "../Components/admin/ui";
@@ -14,6 +14,7 @@ const nav = [
   { to: "/admin/portfolio", label: "Portfolio", icon: Image },
   { to: "/admin/blog", label: "Blog", icon: Newspaper },
   { to: "/admin/clients", label: "Clients & Testimonials", icon: UsersRound },
+  { to: "/admin/team", label: "Team Management", icon: UserRound },
   { to: "/admin/content", label: "Content & SEO", icon: SlidersHorizontal },
   { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
