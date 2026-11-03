@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ExternalLink, Globe2 } from "lucide-react";
 import { Section } from "../common/primitives";
+import { services } from "../../data/services";
 
 const groups = [
   { key: "Completed", title: "Completed Projects", description: "Delivered projects, live and ready to explore." },
@@ -54,7 +55,7 @@ function ProjectCard({ project }) {
       <div className="grid flex-1 gap-4 p-4 sm:grid-cols-[1.05fr_0.95fr] sm:p-5">
         <div className="flex min-w-0 flex-col">
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-[#F97316]/30 bg-[#F97316]/10 px-2.5 py-1 text-[11px] font-bold text-[#FDBA74]">{project.serviceTypeLabel || project.serviceType || "Project"}</span>
+            <span className="rounded-full border border-[#F97316]/30 bg-[#F97316]/10 px-2.5 py-1 text-[11px] font-bold text-[#FDBA74]">{service?.title || project.serviceTypeLabel || project.serviceType || "Project"}</span>
             <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${status === "Completed" ? "bg-emerald-400/10 text-emerald-300" : status === "On Hold" ? "bg-amber-400/10 text-amber-200" : "bg-sky-400/10 text-sky-200"}`}>{status}</span>
           </div>
           <h3 className="text-xl font-extrabold leading-tight text-white">{project.name}</h3>
