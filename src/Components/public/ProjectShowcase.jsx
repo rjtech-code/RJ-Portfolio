@@ -40,8 +40,8 @@ function Preview({ project, compact = false }) {
 
   useEffect(() => setFailed(false), [project.liveUrl]);
 
-  const frameWidth = mobileViewport ? 300 : 1200;
-  const frameHeight = mobileViewport ? 650 : 760;
+  const frameWidth = mobileViewport ? 390 : 1200;
+  const frameHeight = mobileViewport ? 520 : 760;
   const scale = Math.min(1, containerWidth > 0 ? containerWidth / frameWidth : 1);
 
   return (
@@ -124,14 +124,14 @@ function ProjectCard({ project, compact = false }) {
           <div className="p-2 sm:p-4">
             <Preview project={project} compact />
           </div>
-          <div className="flex flex-col gap-3 px-4 pb-4 pt-1 sm:flex-row sm:items-center sm:justify-between sm:px-5 sm:pb-5">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 px-3 pb-3 pt-1 sm:flex sm:justify-between sm:gap-3 sm:px-5 sm:pb-5">
             <div className="min-w-0">
-              <h3 className="truncate text-xl font-extrabold text-white sm:text-2xl">{project.name}</h3>
+              <h3 className="truncate text-base font-extrabold text-white sm:text-2xl">{project.name}</h3>
               {project.budget != null && <p className="mt-1 text-sm font-semibold text-[#FDBA74]">₹{Number(project.budget).toLocaleString("en-IN")}</p>}
             </div>
-            <div className="flex shrink-0 flex-wrap gap-2">
-              <button type="button" onClick={() => setDetailsOpen(true)} className="inline-flex items-center justify-center rounded-lg border border-white/15 px-4 py-2.5 text-sm font-bold text-white transition hover:border-[#F97316] hover:text-[#FDBA74]">Details</button>
-              {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#F97316] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-orange-500">Go Live <ExternalLink size={14} /></a>}
+            <div className="flex shrink-0 flex-nowrap gap-1.5 sm:gap-2">
+              <button type="button" onClick={() => setDetailsOpen(true)} className="inline-flex items-center justify-center rounded-lg border border-white/15 px-2.5 py-2 text-xs font-bold text-white transition hover:border-[#F97316] hover:text-[#FDBA74] sm:px-4 sm:py-2.5 sm:text-sm">Details</button>
+              {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-1 rounded-lg bg-[#F97316] px-2.5 py-2 text-xs font-bold text-white transition hover:bg-orange-500 sm:gap-2 sm:px-4 sm:py-2.5 sm:text-sm">Go Live <ExternalLink size={14} /></a>}
             </div>
           </div>
         </article>
@@ -203,7 +203,7 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
           <button type="button" aria-label="Next project" onClick={() => setActive((n) => (n + 1) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowRight size={18} /></button>
         </div>
         <div ref={trackRef} className="flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]" style={{ perspective: "1400px" }} aria-label="Project slider">
-          {filtered.map((project, index) => <div key={project._id || project.name} data-project-index={index} className="w-[500px] min-w-[500px] max-w-[500px] snap-start transition-transform duration-500" style={{ transform: index === active ? "rotateY(0deg) translateZ(0)" : index < active ? "rotateY(3deg) translateZ(-12px)" : "rotateY(-3deg) translateZ(-12px)", transformOrigin: index < active ? "right center" : "left center" }}><ProjectCard project={project} compact /></div>)}
+          {filtered.map((project, index) => <div key={project._id || project.name} data-project-index={index} className="w-[calc(100vw-2rem)] min-w-0 max-w-[500px] snap-start transition-transform duration-500 sm:w-[500px] sm:min-w-[500px]" style={{ transform: index === active ? "rotateY(0deg) translateZ(0)" : index < active ? "rotateY(3deg) translateZ(-12px)" : "rotateY(-3deg) translateZ(-12px)", transformOrigin: index < active ? "right center" : "left center" }}><ProjectCard project={project} compact /></div>)}
         </div>
       </div>
     </Section>
