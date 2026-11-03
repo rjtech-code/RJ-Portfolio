@@ -165,41 +165,65 @@ function ProjectCard({ project, compact = false }) {
 export default function ProjectShowcase({ projects = [], mode = "slider", serviceType = null }) {
   const filtered = useMemo(() => orderedProjects(projects.filter((p) => !serviceType || p.serviceType === serviceType)), [projects, serviceType]);
   const loopProjects = useMemo(() => [...filtered, ...filtered, ...filtered], [filtered]);
-  const [active, setActive] = useState(filtered.length);
   const [paused, setPaused] = useState(false);
   const trackRef = useRef(null);
-  const manualScrollRef = useRef(false);
-  const programmaticScrollRef = useRef(false);
-
-  useEffect(() => { setActive(filtered.length); }, [serviceType, filtered.length]);
-  useEffect(() => {
-    if (mode !== "slider" || paused || filtered.length < 2) return undefined;
-    const timer = window.setInterval(() => {
-      setActive((current) => current + 1);
-    }, 5000);
-    return () => window.clearInterval(timer);
-  }, [mode, paused, filtered.length]);
+  const speedRef = useRef(0.35);
 
   useEffect(() => {
-    if (mode !== "slider" || !trackRef.current || filtered.length < 2) return;
-    if (active >= filtered.length * 2) {
-      manualScrollRef.current = true;
-      setActive(filtered.length);
-      return;
-    }
+    if (mode !== "slider" || filtered.length < 2 || !trackRef.current) return undefined;
     const track = trackRef.current;
-    const node = track.querySelector(`[data-project-index="${active}"]`);
-    if (!node) return;
-    const targetLeft = node.offsetLeft - (track.clientWidth - node.clientWidth) / 2;
-    programmaticScrollRef.current = true;
-    track.scrollTo({
-      left: targetLeft,
-      behavior: manualScrollRef.current ? "auto" : "smooth",
-    });
-    manualScrollRef.current = false;
-    if (track.scrollLeft === targetLeft) programmaticScrollRef.current = false;
-  }, [active, mode, filtered.length]);
+    let frameId;
+    let lastTime = 0;
+    let groupWidth = 0;
 
+    const measure = () => {
+      const first = track.querySelector('[data-project-index="0"]');
+      const nextGroup = track.querySelector(`[data-project-index="${filtered.length}"]`);
+      if (!first || !nextGroup) return;
+      groupWidth = nextGroup.offsetLeft - first.offsetLeft;
+      if (groupWidth > 0 && track.dataset.loopReady !== "true") {
+        track.scrollLeft = groupWidth + first.offsetLeft - (track.clientWidth - first.offsetWidth) / 2;
+        track.dataset.loopReady = "true";
+      }
+    };
+
+    const animate = (time) => {
+      if (!track.isConnected) return;
+      if (!lastTime) lastTime = time;
+      const delta = Math.min(time - lastTime, 40);
+      lastTime = time;
+
+      if (!paused && groupWidth > 0) {
+        track.scrollLeft += speedRef.current * delta;
+        if (track.scrollLeft >= groupWidth * 2) {
+          track.scrollLeft -= groupWidth;
+        }
+      }
+
+      const center = track.scrollLeft + track.clientWidth / 2;
+      track.querySelectorAll("[data-project-index]").forEach((node) => {
+        const nodeCenter = node.offsetLeft + node.offsetWidth / 2;
+        const normalized = (nodeCenter - center) / Math.max(node.offsetWidth, 1);
+        const clamped = Math.max(-1.6, Math.min(1.6, normalized));
+        const rotation = -clamped * 28;
+        const depth = -Math.min(Math.abs(clamped) * 75, 120);
+        const scale = 1 - Math.min(Math.abs(clamped) * 0.12, 0.18);
+        node.style.transform = `rotateY(${rotation}deg) translateZ(${depth}px) scale(${scale})`;
+        node.style.transformOrigin = normalized < 0 ? "right center" : "left center";
+      });
+      frameId = window.requestAnimationFrame(animate);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(track);
+    frameId = window.requestAnimationFrame(animate);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      observer.disconnect();
+      delete track.dataset.loopReady;
+    };
+  }, [mode, filtered.length, paused]);
   if (!filtered.length) return null;
 
   if (mode === "sections") {
@@ -216,63 +240,31 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
 
   return (
     <Section eyebrow="Our work" title="Projects in action" intro="Explore completed work and projects currently in progress.">
-      <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false); }}>
-        <div className="mb-4 flex justify-end gap-2">
-          <button type="button" aria-label="Previous project" onClick={() => setActive((n) => n - 1 < filtered.length ? n - 1 + filtered.length : n - 1)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowLeft size={18} /></button>
-          <button type="button" aria-label="Next project" onClick={() => setActive((n) => n + 1 >= filtered.length * 2 ? filtered.length : n + 1)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowRight size={18} /></button>
-        </div>
+      <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
         <div
           ref={trackRef}
-          onScrollEnd={(event) => {
-            const track = event.currentTarget;
-            programmaticScrollRef.current = false;
-            const center = track.scrollLeft + track.clientWidth / 2;
-            let closestIndex = active;
-            let closestDistance = Infinity;
-            track.querySelectorAll("[data-project-index]").forEach((node) => {
-              const nodeCenter = node.offsetLeft + node.offsetWidth / 2;
-              const distance = Math.abs(center - nodeCenter);
-              if (distance < closestDistance) {
-                closestDistance = distance;
-                closestIndex = Number(node.dataset.projectIndex);
-              }
-            });
-            const count = filtered.length;
-            const equivalentIndex = closestIndex < count
-              ? closestIndex + count
-              : closestIndex >= count * 2
-                ? closestIndex - count
-                : closestIndex;
-            if (equivalentIndex !== closestIndex) manualScrollRef.current = true;
-            setActive((current) => current === equivalentIndex ? current : equivalentIndex);
+          className="flex items-stretch gap-3 overflow-x-auto px-[16.666vw] pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-5 sm:px-0 sm:pb-3"
+          style={{
+            perspective: "1000px",
+            transformStyle: "preserve-3d",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            overflowY: "hidden",
           }}
-          className="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto scroll-smooth px-[16.666vw] pb-4 [scrollbar-width:none] sm:gap-5 sm:px-0 sm:pb-3 sm:[scrollbar-width:thin]"
-          style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
-          aria-label="Project slider"
+          aria-label="Continuously rolling project carousel"
         >
-          {loopProjects.map((project, index) => {
-            const distance = index - active;
-            const rotation = distance === 0 ? 0 : distance < 0 ? 24 : -24;
-            const depth = distance === 0 ? 0 : -Math.min(Math.abs(distance) * 35, 100);
-            const scale = distance === 0 ? 1 : Math.max(0.78, 0.9 - Math.min(Math.abs(distance) - 1, 3) * 0.04);
-            return (
-              <div
-                key={project._id || project.name}
-                data-project-index={index}
-                data-real-index={index % filtered.length}
-                className="w-[66.666vw] min-w-[66.666vw] max-w-[500px] snap-center transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:w-[500px] sm:min-w-[500px] sm:snap-start"
-                style={{
-                  transform: `rotateY(${rotation}deg) translateZ(${depth}px) scale(${scale})`,
-                  transformOrigin: distance < 0 ? "right center" : "left center",
-                  backfaceVisibility: "hidden",
-                }}
-              >
-                <ProjectCard project={project} compact />
-              </div>
-            );
-          })}
+          {loopProjects.map((project, index) => (
+            <div
+              key={`${project._id || project.name}-loop-${index}`}
+              data-project-index={index}
+              data-real-index={index % filtered.length}
+              className="w-[66.666vw] min-w-[66.666vw] max-w-[500px] flex-none sm:w-[500px] sm:min-w-[500px]"
+              style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
+            >
+              <ProjectCard project={project} compact />
+            </div>
+          ))}
         </div>
       </div>
     </Section>
   );
-}
