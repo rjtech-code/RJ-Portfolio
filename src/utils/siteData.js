@@ -14,6 +14,7 @@ export const normalizeSiteData = (raw) => ({
   settings: mergeSettings(raw?.settings),
   pagesByKey: Object.fromEntries((raw?.pages || []).map((page) => [page.key, page])),
   portfolio: raw?.portfolio || [],
+  projects: raw?.projects || [],
   posts: raw?.posts || [],
   testimonials: raw?.testimonials || [],
   // Full records for detail pages, keyed "portfolio:<slug>" / "blog:<slug>"
