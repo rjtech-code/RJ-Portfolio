@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Download, Mail, MessageSquare, Phone, Trash2, X } from "lucide-react";
 import { adminApi } from "../../services/adminApi";
 import { Button, EmptyState, ErrorState, FilterSelect, LoadingState, PageHeader, Pill, SearchInput, SelectInput, Table, TextArea, TextInput, Toolbar } from "../../Components/admin/ui";
@@ -8,9 +9,21 @@ import { useToast } from "../../hooks/useToast";
 
 const STATUSES = ["New", "Contacted", "In Progress", "Closed"];
 const TYPES = ["Business Website", "Web Application", "SaaS Platform", "E-Commerce", "UI/UX Design", "Other"];
+const VIEW_TYPES = {
+  "dev-contact": "project_contact",
+  "demo-requests": "demo_request",
+  "installation-requests": "installation_request",
+  "product-inquiries": "product_site_contact",
+};
+const VIEW_TITLES = {
+  "dev-contact": "Dev Website Inquiries",
+  "demo-requests": "Demo Requests",
+  "installation-requests": "Installation Requests",
+  "product-inquiries": "Product Website Inquiries",
+};
 
 const toCsv = (rows) => {
-  const cols = ["createdAt", "fullName", "email", "phone", "projectType", "status", "followUpDate", "projectDetails", "notes"];
+  const cols = ["createdAt", "fullName", "email", "phone", "inquiryType", "sourceDomain", "organization", "productName", "studentCount", "location", "projectType", "status", "followUpDate", "projectDetails", "notes"];
   const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   return [cols.join(","), ...rows.map((r) => cols.map((c) => esc(r[c])).join(","))].join("\n");
 };
@@ -56,7 +69,12 @@ function EnquiryDetails({ enquiry, onClose, onSaved, onDelete }) {
           <li><a href={`https://wa.me/${phone.replace("+", "")}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#CBD5E1] hover:text-[#F97316]"><MessageSquare size={14} aria-hidden="true" />Open WhatsApp</a></li>
         </ul>
         <div>
-          <p className="text-xs font-semibold text-[#94A3B8] mb-1">{enquiry.projectType}</p>
+          <p className="text-xs font-semibold text-[#94A3B8] mb-1">{enquiry.projectType} · {enquiry.inquiryType || "project_contact"}</p>
+          <p className="text-xs text-[#94A3B8] mb-1">Source: {enquiry.sourceDomain || "legacy inquiry"}</p>
+          {enquiry.organization && <p className="text-sm text-white mb-1">Organization: {enquiry.organization}</p>}
+          {enquiry.productName && <p className="text-sm text-white mb-1">Product: {enquiry.productName}</p>}
+          {Number.isFinite(enquiry.studentCount) && <p className="text-sm text-white mb-1">Students: {enquiry.studentCount.toLocaleString("en-IN")}</p>}
+          {enquiry.location && <p className="text-sm text-white mb-2">Location: {enquiry.location}</p>}
           <p className="text-sm text-white whitespace-pre-line bg-[var(--rj-navy-950)] rounded-lg p-3 border border-white/5 max-h-48 overflow-y-auto">{enquiry.projectDetails}</p>
         </div>
         <SelectInput label="Status" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} options={STATUSES} />
@@ -72,6 +90,9 @@ function EnquiryDetails({ enquiry, onClose, onSaved, onDelete }) {
 }
 
 export default function Enquiries() {
+  const { view } = useParams();
+  const viewType = VIEW_TYPES[view] || null;
+  const pageTitle = VIEW_TITLES[view] || "Enquiries & CRM";
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
@@ -114,7 +135,7 @@ export default function Enquiries() {
       (typeFilter === "All" || i.projectType === typeFilter) &&
       (!q || [i.fullName, i.email, i.phone, i.projectDetails].some((v) => v?.toLowerCase().includes(q)))
     );
-  }, [items, query, statusFilter, typeFilter]);
+  }, [items, query, statusFilter, typeFilter, viewType]);
 
   const selected = items.find((i) => i._id === selectedId);
 
@@ -127,7 +148,7 @@ export default function Enquiries() {
 
   return (
     <>
-      <PageHeader title="Enquiries & CRM" subtitle="Leads submitted through the website contact forms." actions={<Button variant="secondary" onClick={exportCsv} disabled={!filtered.length}><Download size={16} aria-hidden="true" /> Export CSV</Button>} />
+      <PageHeader title={pageTitle} subtitle="Leads from dev.vultusgo.in, Vultus Go demo and installation forms, and the product website." actions={<Button variant="secondary" onClick={exportCsv} disabled={!filtered.length}><Download size={16} aria-hidden="true" /> Export CSV</Button>} />
       <Toolbar>
         <SearchInput value={query} onChange={setQuery} placeholder="Search name, email, phone or details…" label="Search enquiries" />
         <FilterSelect label="Filter by status" value={statusFilter} onChange={setStatusFilter} options={[["All", "All statuses"], ...STATUSES]} />
@@ -139,7 +160,7 @@ export default function Enquiries() {
       ) : (
         <div className={`grid gap-6 ${selected ? "xl:grid-cols-[1fr_360px]" : ""}`}>
           {filtered.length === 0 ? <EmptyState title="No enquiries match these filters" /> : (
-            <Table columns={["Name", "Project type", "Received", "Follow-up", "Status"]} caption="Enquiries">
+            <Table columns={["Name", "Inquiry type", "Source", "Received", "Follow-up", "Status"]} caption="Enquiries">
               {filtered.map((e) => {
                 const due = e.followUpDate && new Date(e.followUpDate) <= new Date() && e.status !== "Closed";
                 return (
@@ -150,7 +171,8 @@ export default function Enquiries() {
                         <span className="text-xs text-[#94A3B8]">{e.email}</span>
                       </button>
                     </td>
-                    <td className="px-4 py-3 text-[#CBD5E1]">{e.projectType}</td>
+                    <td className="px-4 py-3 text-[#CBD5E1] whitespace-nowrap">{({ project_contact: "Dev contact", demo_request: "Demo request", installation_request: "Installation", product_site_contact: "Product inquiry" })[e.inquiryType || "project_contact"] || e.projectType}</td>
+                    <td className="px-4 py-3 text-xs text-[#94A3B8]">{e.sourceDomain || "legacy"}</td>
                     <td className="px-4 py-3 text-[#CBD5E1] whitespace-nowrap">{formatDateTime(e.createdAt)}</td>
                     <td className={`px-4 py-3 whitespace-nowrap ${due ? "text-red-300 font-semibold" : "text-[#94A3B8]"}`}>{e.followUpDate ? formatDateTime(e.followUpDate) : "—"}</td>
                     <td className="px-4 py-3"><Pill tone={STATUS_TONES[e.status]}>{e.status}</Pill></td>
