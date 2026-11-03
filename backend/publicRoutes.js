@@ -10,7 +10,7 @@ import { getSiteSettings } from './models/Setting.js';
 const router = express.Router();
 
 const PORTFOLIO_SUMMARY = 'title slug category summary technologies image imageAlt isSample featured publishedAt';
-const PROJECT_SUMMARY = 'name clientName status progress budget serviceType liveUrl description updatedAt';
+const PROJECT_SUMMARY = 'name clientName status progress budget serviceType previewImage liveUrl description updatedAt';
 const POST_SUMMARY = 'title slug excerpt category tags coverImage author metaTitle metaDescription isSample publishedAt updatedAt';
 
 const cache = (res) => res.set('Cache-Control', 'public, max-age=60');
