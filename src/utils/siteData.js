@@ -17,6 +17,7 @@ export const normalizeSiteData = (raw) => ({
   projects: raw?.projects || [],
   posts: raw?.posts || [],
   testimonials: raw?.testimonials || [],
+  team: raw?.team || [],
   // Full records for detail pages, keyed "portfolio:<slug>" / "blog:<slug>"
   details: raw?.details || {},
   // true once real data (build-time or API) is available
