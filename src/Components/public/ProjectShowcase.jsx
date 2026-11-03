@@ -57,17 +57,11 @@ function Preview({ project, compact = false }) {
         </div>
       </div>
       {project.liveUrl && !failed ? (
-        <div
-          ref={viewportRef}
-          className="relative w-full overflow-hidden bg-white"
-          style={{ height: frameHeight * scale, overscrollBehavior: "contain" }}
-        >
+        <div ref={viewportRef} className="relative w-full overflow-hidden bg-white" style={{ height: frameHeight * scale }}>
           <iframe
             title={`${project.name} live website preview`}
             src={project.liveUrl}
             loading="lazy"
-            scrolling="yes"
-            tabIndex={0}
             onError={() => setFailed(true)}
             referrerPolicy="strict-origin-when-cross-origin"
             className="absolute top-0 max-w-none border-0 bg-white"
@@ -75,10 +69,9 @@ function Preview({ project, compact = false }) {
               width: frameWidth,
               height: frameHeight,
               left: "50%",
-              transform: "translateX(-50%)",
+              transform: `translateX(-50%) scale(${scale})`,
               transformOrigin: "top center",
-              zoom: scale,
-              pointerEvents: "auto",
+              pointerEvents: "none",
             }}
           />
         </div>
