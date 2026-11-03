@@ -203,7 +203,7 @@ export default function ProjectShowcase({ projects = [], mode = "slider", servic
           <button type="button" aria-label="Next project" onClick={() => setActive((n) => (n + 1) % filtered.length)} className="rounded-full border border-white/15 p-2.5 text-white hover:border-[#F97316] hover:text-[#F97316]"><ArrowRight size={18} /></button>
         </div>
         <div ref={trackRef} className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:thin]" aria-label="Project slider">
-          {filtered.map((project, index) => <div key={project._id || project.name} data-project-index={index} className="w-full min-w-full snap-start"><ProjectCard project={project} compact /></div>)}
+          {filtered.map((project, index) => <div key={project._id || project.name} data-project-index={index} className="w-[300px] min-w-[300px] max-w-[300px] snap-start"><ProjectCard project={project} compact /></div>)}
         </div>
       </div>
     </Section>
