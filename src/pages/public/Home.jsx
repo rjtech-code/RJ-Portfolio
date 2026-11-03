@@ -4,7 +4,7 @@ import Hero from "../../Components/Hero";
 import { services } from "../../data/services";
 import { faqGroups, processSteps } from "../../data/content";
 import { useSiteData } from "../../hooks/useSiteData";
-import { Container, CtaBanner, Eyebrow, Section, SkeletonGrid, EmptyState, ButtonLink } from "../../Components/common/primitives";
+import { Container, CtaBanner, Eyebrow, Section, ButtonLink } from "../../Components/common/primitives";
 import Spot from "../../Components/common/Spot";
 import ProjectShowcase from "../../Components/public/ProjectShowcase";
 import { FaqAccordion, StepRow, Testimonials } from "../../Components/public/Blocks";
@@ -17,28 +17,6 @@ const reasons = [
 ];
 
 const TILE_TINTS = ["text-[#F97316] bg-[#F97316]/10", "text-sky-300 bg-sky-400/10", "text-cyan-300 bg-cyan-400/10", "text-pink-300 bg-pink-400/10", "text-amber-300 bg-amber-400/10", "text-violet-300 bg-violet-400/10"];
-
-const FeaturedProjects = () => {
-  const { portfolio, status } = useSiteData();
-  const featured = [...portfolio].sort((a, b) => Number(b.featured) - Number(a.featured)).slice(0, 3);
-
-  return (
-    <Section eyebrow="Portfolio" title="Our featured projects" tone="light">
-      {featured.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featured.map((project) => <ProjectCard key={project.slug} project={project} />)}
-        </div>
-      ) : status === "loading" ? (
-        <SkeletonGrid count={3} />
-      ) : (
-        <EmptyState title="Projects coming soon" text="Our latest case studies will appear here." />
-      )}
-      <div className="mt-10">
-        <ButtonLink to="/portfolio" variant="secondary" arrow>View full portfolio</ButtonLink>
-      </div>
-    </Section>
-  );
-};
 
 export default function Home() {
   const faqPreview = faqGroups.flatMap((group) => group.items).slice(0, 4);
