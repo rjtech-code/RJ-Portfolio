@@ -78,6 +78,7 @@ export default function AppRoutes() {
       <Route path="admin" element={admin(AdminLayout)}>
         <Route index element={admin(AdminOverview)} />
         <Route path="enquiries" element={admin(Enquiries)} />
+        <Route path="enquiries/:view" element={admin(Enquiries)} />
         <Route path="projects" element={admin(Projects)} />
         <Route path="portfolio" element={admin(PortfolioManagement)} />
         <Route path="blog" element={admin(BlogManagement)} />
