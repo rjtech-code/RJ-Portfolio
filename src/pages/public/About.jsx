@@ -8,6 +8,7 @@ import { Icon } from "../../Components/common/Icon";
 import Spot from "../../Components/common/Spot";
 import { HeroIllustration } from "../../Components/public/Illustrations";
 import { Testimonials } from "../../Components/public/Blocks";
+import TeamSection from "../../Components/public/TeamSection";
 
 const pillars = [
   { icon: Compass, title: "Our Mission", text: about.mission },
@@ -18,6 +19,7 @@ const pillars = [
 
 export default function About() {
   const { heading, intro } = usePageContent("about", pageByKey.about);
+  const { team } = useSiteData();
 
   return (
     <>
@@ -76,6 +78,8 @@ export default function About() {
           ))}
         </ul>
       </Section>
+
+      <TeamSection members={team} tone="light" />
 
       {/* Team: roles until real profiles are approved */}
       <Section tone="light" eyebrow="Our team" title="How our team is organised" intro="Specialists who work together on every project.">
