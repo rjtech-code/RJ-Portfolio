@@ -34,6 +34,7 @@ const BlogEditor = lazy(() => import("../pages/admin/BlogEditor"));
 const Clients = lazy(() => import("../pages/admin/Clients"));
 const ContentManagement = lazy(() => import("../pages/admin/ContentManagement"));
 const Settings = lazy(() => import("../pages/admin/Settings"));
+const TeamManagement = lazy(() => import("../pages/admin/TeamManagement"));
 
 const AdminFallback = () => <div className="min-h-screen bg-[#060E1D]" aria-busy="true" />;
 const admin = (Component) => (
@@ -84,6 +85,7 @@ export default function AppRoutes() {
         <Route path="blog" element={admin(BlogManagement)} />
         <Route path="blog/:id" element={admin(BlogEditor)} />
         <Route path="clients" element={admin(Clients)} />
+        <Route path="team" element={admin(TeamManagement)} />
         <Route path="content" element={admin(ContentManagement)} />
         <Route path="settings" element={admin(Settings)} />
         <Route path="*" element={<p className="text-[#94A3B8]">This admin page doesn't exist.</p>} />
