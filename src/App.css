@@ -125,3 +125,198 @@ h4 {
 .skip-link:focus {
   top: 1rem;
 }
+
+
+/* ---- Automatic system appearance: shared design tokens ----
+   The initial data-theme is set in index.html before the app paints and follows
+   prefers-color-scheme changes without React state or a manual preference. */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page-bg: #050c1a;
+  --page-bg-secondary: #08142a;
+  --section-bg: #0a1730;
+  --surface-bg: #0c1a33;
+  --surface-raised: #102342;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: rgba(96, 140, 210, 0.18);
+  --brand-orange: #f97316;
+  --brand-cyan: #38bdf8;
+  --brand-blue: #2563eb;
+  --soft-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  --primary-bg: var(--page-bg);
+  --secondary-bg: var(--page-bg-secondary);
+  --card-bg: var(--surface-bg);
+  --elevated-surface: var(--surface-raised);
+  --primary-text: var(--text-primary);
+  --secondary-text: var(--text-secondary);
+  --border-dark: var(--border-color);
+  --light-text: #f8fafc;
+  --rj-navy-950: #050c1a;
+  --rj-navy-900: #08142a;
+  --rj-panel: #0c1a33;
+  --rj-panel-border: rgba(96, 140, 210, 0.18);
+  --rj-cyan: #38bdf8;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page-bg: #ffffff;
+  --page-bg-secondary: #f5f8ff;
+  --section-bg: #f0f5ff;
+  --surface-bg: #ffffff;
+  --surface-raised: #f8fbff;
+  --text-primary: #0b1b38;
+  --text-secondary: #405477;
+  --text-muted: #71819b;
+  --border-color: #e1eaf7;
+  --brand-orange: #ff7417;
+  --brand-cyan: #079bd4;
+  --brand-blue: #0755c9;
+  --soft-shadow: 0 10px 28px rgba(28, 76, 140, 0.09);
+  --primary-bg: var(--page-bg);
+  --secondary-bg: var(--page-bg-secondary);
+  --card-bg: var(--surface-bg);
+  --elevated-surface: var(--section-bg);
+  --primary-text: var(--text-primary);
+  --secondary-text: var(--text-secondary);
+  --border-dark: var(--border-color);
+  --light-text: var(--text-primary);
+  --rj-navy-950: #ffffff;
+  --rj-navy-900: #f5f8ff;
+  --rj-panel: #ffffff;
+  --rj-panel-border: #e1eaf7;
+  --rj-cyan: #079bd4;
+}
+
+html {
+  background: var(--page-bg);
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text-primary);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+/* Semantic components and native controls consume tokens in both themes. */
+.tech-card {
+  background: var(--surface-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--soft-shadow);
+}
+
+:where(input, textarea, select) {
+  color: var(--text-primary);
+}
+
+:where(input, textarea, select)::placeholder {
+  color: var(--text-muted);
+}
+
+:where(button, a, input, textarea, select):focus-visible {
+  outline-color: var(--brand-cyan);
+}
+
+:root[data-theme="light"] .tech-grid {
+  background-image:
+    linear-gradient(to right, rgba(7, 85, 201, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(7, 85, 201, 0.055) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse at center, #ffffff, transparent 90%);
+}
+
+:root[data-theme="light"] .circuit-bg {
+  background-image:
+    linear-gradient(rgba(7, 85, 201, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7, 85, 201, 0.055) 1px, transparent 1px);
+}
+
+/* Public layout and the existing Tailwind dark-surface utilities. */
+:root[data-theme="light"] .bg-\[var\(--rj-navy-950\)\],
+:root[data-theme="light"] .bg-\[var\(--rj-navy-900\)\],
+:root[data-theme="light"] .bg-\[var\(--rj-panel\)\] {
+  background-color: var(--surface-bg) !important;
+}
+
+:root[data-theme="light"] [class*="bg-[#050c1a"],
+:root[data-theme="light"] [class*="bg-[#050C1A"],
+:root[data-theme="light"] [class*="bg-[#060E1D"],
+:root[data-theme="light"] [class*="bg-[#060e1d"],
+:root[data-theme="light"] [class*="bg-[#081329"],
+:root[data-theme="light"] [class*="bg-[#081329"],
+:root[data-theme="light"] [class*="bg-[#08142a"],
+:root[data-theme="light"] [class*="bg-[#0A1730"],
+:root[data-theme="light"] [class*="bg-[#0a1730"],
+:root[data-theme="light"] [class*="bg-[#0c1a33"],
+:root[data-theme="light"] [class*="bg-[#0C1A33"],
+:root[data-theme="light"] [class*="bg-[#0f172a"],
+:root[data-theme="light"] [class*="bg-[#0F172A"],
+:root[data-theme="light"] [class*="bg-[#102342"],
+:root[data-theme="light"] [class*="bg-[#172554"],
+:root[data-theme="light"] [class*="bg-[#1e3a8a"],
+:root[data-theme="light"] [class*="bg-slate-950"],
+:root[data-theme="light"] [class*="bg-slate-900"],
+:root[data-theme="light"] [class*="bg-gray-950"],
+:root[data-theme="light"] [class*="bg-gray-900"] {
+  background-color: var(--surface-bg) !important;
+  background-image: none;
+}
+
+:root[data-theme="light"] [class*="border-white/"] {
+  border-color: var(--border-color) !important;
+}
+
+/* Most white labels in the existing dark design become readable navy labels.
+   Keep white text on solid brand CTA buttons and dark media overlays. */
+:root[data-theme="light"] .text-white,
+:root[data-theme="light"] [class~="text-white/60"],
+:root[data-theme="light"] [class~="text-white/70"],
+:root[data-theme="light"] [class~="text-white/80"] {
+  color: var(--text-primary) !important;
+}
+
+:root[data-theme="light"] .bg-\[\#F97316\].text-white,
+:root[data-theme="light"] .bg-\[\#f97316\].text-white,
+:root[data-theme="light"] .bg-\[\#FF7417\].text-white,
+:root[data-theme="light"] .bg-\[\#ff7417\].text-white,
+:root[data-theme="light"] .bg-\[\#EA580C\].text-white,
+:root[data-theme="light"] .bg-\[\#ea580c\].text-white,
+:root[data-theme="light"] .bg-orange-500.text-white,
+:root[data-theme="light"] .bg-orange-600.text-white {
+  color: #ffffff !important;
+}
+
+/* Light-theme surfaces for common card, dropdown, modal and form patterns. */
+:root[data-theme="light"] .tech-card,
+:root[data-theme="light"] [class*="bg-white/5"],
+:root[data-theme="light"] [class*="bg-white/\[0.0"],
+:root[data-theme="light"] [class*="backdrop-blur"] {
+  border-color: var(--border-color);
+}
+
+:root[data-theme="light"] input,
+:root[data-theme="light"] textarea,
+:root[data-theme="light"] select {
+  background-color: #ffffff;
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] input::placeholder,
+:root[data-theme="light"] textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Ensure native browser widgets, scrollbar surfaces and page transitions match. */
+:root[data-theme="light"] ::selection {
+  background: var(--brand-orange);
+  color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+}
