@@ -504,3 +504,47 @@ body {
 :root[data-theme="light"] .bg-\[var\(--rj-navy-900\)\] {
   background-color: var(--page-bg-secondary);
 }
+
+
+:root[data-theme="light"] .hero-monitor-stand {
+  background: linear-gradient(180deg, #d6e0ef, #b8c9df);
+}
+
+:root[data-theme="light"] .hero-monitor-base {
+  background: linear-gradient(180deg, #dce5f2, #b7c8df);
+  border-color: rgba(255, 116, 23, 0.45);
+  box-shadow: 0 8px 22px rgba(25, 65, 125, 0.09);
+}
+
+/* Service-page mini monitor mockups share the same light product-UI language. */
+:root[data-theme="light"] .hero-illustration-screen {
+  background: linear-gradient(145deg, #ffffff 0%, #f1f6ff 100%);
+  border-color: #d7e4f5;
+  box-shadow: 0 14px 34px rgba(23, 62, 120, 0.09);
+}
+
+:root[data-theme="light"] .hero-illustration-screen .border-white\/5,
+:root[data-theme="light"] .hero-illustration-screen [class*="border-white/5"] {
+  border-color: #e1eaf7;
+}
+
+:root[data-theme="light"] .hero-illustration-screen .hero-illustration-line {
+  background-color: #d7e3f3;
+}
+
+:root[data-theme="light"] .hero-illustration-screen .hero-illustration-card {
+  background-color: #eaf2ff;
+  border-color: #dce7f5;
+}
+
+:root[data-theme="light"] .hero-illustration-screen [class*="text-white"] {
+  color: #405477 !important;
+}
+
+:root[data-theme="light"] .hero-illustration-screen [class*="from-sky-500"] {
+  --tw-gradient-from: rgba(7, 85, 201, 0.35) var(--tw-gradient-from-position);
+}
+
+:root[data-theme="light"] .hero-illustration-screen .bg-\[\#F97316\]\/70 {
+  background-color: rgba(255, 116, 23, 0.8);
+}
