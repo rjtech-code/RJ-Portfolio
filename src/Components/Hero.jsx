@@ -375,9 +375,9 @@ const Hero = () => {
               className="relative w-full max-w-[650px] aspect-[16/10] transition-transform duration-200 ease-out"
             >
               {/* Monitor Main Body */}
-              <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 rounded-2xl p-1 shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10">
+              <div className="hero-monitor-frame absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950 rounded-2xl p-1 shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10">
                 {/* Thin Bezel Internal Frame */}
-                <div className="w-full h-full bg-black rounded-[14px] overflow-hidden relative border border-white/5 shadow-2xl">
+                <div className="hero-monitor-screen w-full h-full bg-black rounded-[14px] overflow-hidden relative border border-white/5 shadow-2xl">
                   {/* Screen Reflections */}
                   <div className="absolute inset-0 pointer-events-none z-20 opacity-30 bg-gradient-to-tr from-transparent via-white/5 to-white/10" />
 
@@ -393,13 +393,13 @@ const Hero = () => {
                           transition={{ duration: 0.6, ease: "easeOut" }}
                           className="text-center"
                         >
-                          <p className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight">
+                          <p className="hero-monitor-heading text-3xl md:text-5xl font-black text-white mb-4 tracking-tight">
                             {scenes[sceneIndex].title} <br />
                             <span className="text-[#F97316]">
                               {scenes[sceneIndex].highlight}
                             </span>
                           </p>
-                          <p className="text-white/40 font-mono text-sm uppercase tracking-[0.2em]">
+                          <p className="hero-monitor-caption text-white/40 font-mono text-sm uppercase tracking-[0.2em]">
                             {scenes[sceneIndex].sub}
                           </p>
                         </motion.div>
@@ -439,10 +439,10 @@ const Hero = () => {
                             <Monitor size={40} className="text-white" />
                           </div>
                           <div className="text-center">
-                            <p className="text-4xl font-black text-white mb-2 tracking-[-0.02em]">
+                            <p className="hero-monitor-heading text-4xl font-black text-white mb-2 tracking-[-0.02em]">
                               {scenes[sceneIndex].title}
                             </p>
-                            <p className="text-white/60 text-lg italic">
+                            <p className="hero-monitor-caption text-white/60 text-lg italic">
                               {scenes[sceneIndex].sub}
                             </p>
                           </div>
