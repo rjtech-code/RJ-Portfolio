@@ -203,7 +203,7 @@ const FloatingTechCard = ({ card, index, smoothX, smoothY }) => {
   return (
     <motion.div
       style={{ x, y }}
-      className={`absolute z-30 hidden lg:flex items-center gap-3 p-2.5 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl ${card.pos}`}
+      className={`hero-tech-badge absolute z-30 hidden lg:flex items-center gap-3 p-2.5 bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl ${card.pos}`}
       aria-hidden="true"
     >
       <motion.div
@@ -216,10 +216,10 @@ const FloatingTechCard = ({ card, index, smoothX, smoothY }) => {
         }}
         className="flex items-center gap-3"
       >
-        <div className="w-8 h-8 rounded-lg bg-[#F97316]/10 flex items-center justify-center text-[#F97316]">
+        <div className="hero-tech-badge-icon w-8 h-8 rounded-lg bg-[#F97316]/10 flex items-center justify-center text-[#F97316]">
           {card.icon}
         </div>
-        <span className="text-white text-[10px] font-black uppercase tracking-[0.15em] whitespace-nowrap">
+        <span className="hero-tech-badge-label text-white text-[10px] font-black uppercase tracking-[0.15em] whitespace-nowrap">
           {card.name}
         </span>
       </motion.div>
@@ -331,14 +331,14 @@ const Hero = () => {
               RJ TechForce • Professional Web Development
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tighter leading-tight mb-6 md:mb-10">
+            <h1 className="hero-main-heading text-5xl md:text-7xl font-extrabold text-white tracking-tighter leading-tight mb-6 md:mb-10">
               Professional Web <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#F97316]">
+              <span className="hero-main-highlight text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-[#F97316]">
                 Development
               </span>
             </h1>
 
-            <p className="text-[#94A3B8] text-lg max-w-xl leading-relaxed mb-10 md:mb-16">
+            <p className="hero-description text-[#94A3B8] text-lg max-w-xl leading-relaxed mb-10 md:mb-16">
               RJ TechForce builds modern websites, web applications, and custom digital solutions
               for businesses. From React development and UI/UX design to full-stack web apps —
               we transform ideas into high-performance digital products.
@@ -504,20 +504,20 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="mt-12 bg-white/5 border border-white/10 rounded-xl px-6 py-4 flex flex-wrap gap-x-8 gap-y-3 justify-center items-center backdrop-blur-md"
+              className="hero-category-selector mt-12 bg-white/5 border border-white/10 rounded-xl px-6 py-4 flex flex-wrap gap-x-8 gap-y-3 justify-center items-center backdrop-blur-md"
             >
               {statusItems.map((item, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <CheckCircle
                     size={14}
-                    className={`transition-all duration-500 ${
+                    className={`hero-category-icon transition-all duration-500 ${
                       sceneIndex % statusItems.length === i
                         ? "text-[#F97316] scale-125"
                         : "text-white/20"
                     }`}
                   />
                   <span
-                    className={`text-xs font-bold uppercase tracking-wider transition-colors duration-500 ${
+                    className={`hero-category-label text-xs font-bold uppercase tracking-wider transition-colors duration-500 ${
                       sceneIndex % statusItems.length === i
                         ? "text-white"
                         : "text-white/40"
