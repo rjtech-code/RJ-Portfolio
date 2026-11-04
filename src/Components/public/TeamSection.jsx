@@ -1,7 +1,17 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function TeamSection({ members = [], tone = "dark" }) {
   const [selectedMember, setSelectedMember] = useState(null);
+  const carouselRef = useRef(null);
+
+  const scrollCarousel = (direction) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const firstCard = carousel.querySelector("[data-team-card]");
+    const gap = 20;
+    const amount = firstCard ? firstCard.getBoundingClientRect().width + gap : carousel.clientWidth * 0.8;
+    carousel.scrollBy({ left: direction * amount, behavior: "smooth" });
+  };
 
   if (!members.length) return null;
 
@@ -14,9 +24,13 @@ export default function TeamSection({ members = [], tone = "dark" }) {
           <p className="text-[#94A3B8] mt-3">The people bringing ideas to life through thoughtful design and technology.</p>
         </div>
 
-        <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="relative">
+          <ul
+            ref={carouselRef}
+            className="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
           {members.map((member) => (
-            <li key={member._id || member.name} className="h-[340px] sm:h-[400px] overflow-hidden rounded-2xl border border-[var(--rj-panel-border)] bg-[var(--rj-panel)]">
+            <li data-team-card key={member._id || member.name} className="h-[340px] sm:h-[400px] min-w-[calc(50%-10px)] md:min-w-[calc(33.333%-14px)] lg:min-w-[calc(25%-15px)] snap-start shrink-0 overflow-hidden rounded-2xl border border-[var(--rj-panel-border)] bg-[var(--rj-panel)]">
               <div className="h-3/4 p-2">
                 <img
                   src={member.imageUrl}
@@ -39,7 +53,28 @@ export default function TeamSection({ members = [], tone = "dark" }) {
               </div>
             </li>
           ))}
-        </ul>
+          </ul>
+          {members.length > 1 && (
+            <div className="mt-5 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => scrollCarousel(-1)}
+                aria-label="Previous team members"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--rj-panel-border)] text-white transition-colors hover:border-[#F97316] hover:bg-[#F97316]"
+              >
+                <span aria-hidden="true" className="text-xl">‹</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollCarousel(1)}
+                aria-label="Next team members"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--rj-panel-border)] text-white transition-colors hover:border-[#F97316] hover:bg-[#F97316]"
+              >
+                <span aria-hidden="true" className="text-xl">›</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {selectedMember && (
