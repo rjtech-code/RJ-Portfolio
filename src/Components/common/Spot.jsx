@@ -121,7 +121,7 @@ export default function Spot({ variant = "website", className = "" }) {
   const id = useId();
   const Scene = scenes[variant] || scenes.code;
   return (
-    <svg viewBox="0 0 200 120" className={`spot-illustration ${className}`} aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 200 120" className={className} aria-hidden="true" focusable="false">
       <defs>
         <radialGradient id={`${id}-glow`} cx="50%" cy="60%" r="60%">
           <stop offset="0%" stopColor={O} stopOpacity="0.28" />
