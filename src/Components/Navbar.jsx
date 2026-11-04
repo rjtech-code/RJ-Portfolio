@@ -79,7 +79,7 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${
+      className={`site-navbar fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${
         scrolled || mobileOpen ? "bg-[var(--rj-navy-950)]/90 backdrop-blur-md border-[var(--rj-panel-border)] py-3" : "bg-transparent border-transparent py-5"
       }`}
     >
