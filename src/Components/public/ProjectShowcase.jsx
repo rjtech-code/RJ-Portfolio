@@ -40,8 +40,8 @@ function Preview({ project, compact = false }) {
 
   useEffect(() => setFailed(false), [project.liveUrl]);
 
-  const frameWidth = mobileViewport ? 390 : 1200;
-  const frameHeight = mobileViewport ? 520 : 760;
+  const frameWidth = mobileViewport ? 300 : 1200;
+  const frameHeight = mobileViewport ? 700 : 760;
   const scale = Math.min(1, containerWidth > 0 ? containerWidth / frameWidth : 1);
 
   return (
