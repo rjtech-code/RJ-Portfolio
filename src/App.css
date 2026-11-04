@@ -897,3 +897,25 @@ body {
   -webkit-text-fill-color: #0755c9 !important;
   opacity: 1 !important;
 }
+
+
+/* Shared pale-background exceptions found on About, Services and Pricing. */
+:root[data-theme="light"] .public-site [class*="text-[#FDBA74"],
+:root[data-theme="light"] .public-site [class*="text-[#fdba74"] {
+  color: #a84b08 !important;
+}
+:root[data-theme="light"] .public-site [class*="text-emerald-300"] {
+  color: #047857 !important;
+}
+:root[data-theme="light"] .public-site [class*="text-white/25"],
+:root[data-theme="light"] .public-site [class*="text-white/20"] {
+  color: #64748b !important;
+}
+:root[data-theme="light"] .public-site [class*="text-white/40"] {
+  color: #526783 !important;
+}
+:root[data-theme="light"] .public-site [class*="text-white/60"],
+:root[data-theme="light"] .public-site [class*="text-white/70"],
+:root[data-theme="light"] .public-site [class*="text-white/80"] {
+  color: #405477 !important;
+}
