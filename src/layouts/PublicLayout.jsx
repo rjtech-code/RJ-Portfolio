@@ -25,7 +25,7 @@ export default function PublicLayout() {
   useScrollOnNavigate();
 
   return (
-    <div className="relative min-h-screen bg-[var(--rj-navy-950)] text-white antialiased font-sans flex flex-col">
+    <div className="public-site relative min-h-screen bg-[var(--rj-navy-950)] text-white antialiased font-sans flex flex-col">
       <HeadSync meta={meta} />
       <a href="#main" className="skip-link">Skip to content</a>
       <Navbar />
