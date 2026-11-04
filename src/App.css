@@ -320,3 +320,39 @@ body {
     transition: none;
   }
 }
+
+
+/* Existing muted Tailwind labels need darker equivalents on pale surfaces. */
+:root[data-theme="light"] [class*="text-[#94A3B8"],
+:root[data-theme="light"] [class*="text-[#94a3b8"],
+:root[data-theme="light"] [class*="text-[#9CA3AF"],
+:root[data-theme="light"] [class*="text-[#9ca3af"],
+:root[data-theme="light"] [class*="text-[#A1A1AA"],
+:root[data-theme="light"] [class*="text-[#a1a1aa"],
+:root[data-theme="light"] [class*="text-slate-400"],
+:root[data-theme="light"] [class*="text-slate-500"],
+:root[data-theme="light"] [class*="text-gray-400"],
+:root[data-theme="light"] [class*="text-gray-500"] {
+  color: var(--text-muted) !important;
+}
+
+:root[data-theme="light"] [class*="text-[#CBD5E1"],
+:root[data-theme="light"] [class*="text-[#cbd5e1"],
+:root[data-theme="light"] [class*="text-[#D1D5DB"],
+:root[data-theme="light"] [class*="text-[#d1d5db"],
+:root[data-theme="light"] [class*="text-slate-300"],
+:root[data-theme="light"] [class*="text-gray-300"] {
+  color: var(--text-secondary) !important;
+}
+
+:root[data-theme="light"] [class*="border-[#"],
+:root[data-theme="light"] [class*="border-slate-700"],
+:root[data-theme="light"] [class*="border-slate-800"] {
+  border-color: var(--border-color);
+}
+
+:root[data-theme="light"] .bg-\[\#F97316\],
+:root[data-theme="light"] .bg-\[\#f97316\],
+:root[data-theme="light"] .bg-orange-500 {
+  background-color: var(--brand-orange);
+}
