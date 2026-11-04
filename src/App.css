@@ -548,3 +548,194 @@ body {
 :root[data-theme="light"] .hero-illustration-screen .bg-\[\#F97316\]\/70 {
   background-color: rgba(255, 116, 23, 0.8);
 }
+
+
+/* ---- Light-theme typography refinement only ----
+   Intentionally changes text presentation only: no layout, spacing, sizing,
+   positioning, animation, or component geometry rules are introduced. */
+:root[data-theme="light"] {
+  --type-heading: #0b1b38;
+  --type-section-heading: #102a50;
+  --type-body: #344967;
+  --type-secondary: #526783;
+  --type-muted: #64748b;
+  --type-navigation: #172b49;
+  --type-navigation-hover: #0755c9;
+  --type-link: #0755c9;
+  --type-brand: #0755c9;
+  --type-orange: #c84e05;
+}
+
+/* Base reading color and explicit semantic hierarchy for all public pages. */
+:root[data-theme="light"] .public-site {
+  color: var(--type-body);
+}
+
+:root[data-theme="light"] .public-site h1,
+:root[data-theme="light"] .public-site h1 *,
+:root[data-theme="light"] .public-site [class*="text-4xl"],
+:root[data-theme="light"] .public-site [class*="text-5xl"],
+:root[data-theme="light"] .public-site [class*="text-6xl"],
+:root[data-theme="light"] .public-site [class*="text-7xl"],
+:root[data-theme="light"] .public-site [class*="text-8xl"] {
+  color: var(--type-heading);
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .public-site h2,
+:root[data-theme="light"] .public-site h3,
+:root[data-theme="light"] .public-site h4 {
+  color: var(--type-section-heading);
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .public-site p,
+:root[data-theme="light"] .public-site li,
+:root[data-theme="light"] .public-site address,
+:root[data-theme="light"] .public-site label,
+:root[data-theme="light"] .public-site legend,
+:root[data-theme="light"] .public-site dt,
+:root[data-theme="light"] .public-site dd {
+  color: var(--type-body);
+}
+
+:root[data-theme="light"] .public-site small,
+:root[data-theme="light"] .public-site time,
+:root[data-theme="light"] .public-site figcaption {
+  color: var(--type-secondary);
+}
+
+/* Existing utility colors mapped by meaning, not one blanket color. */
+:root[data-theme="light"] .public-site [class*="text-[#94A3B8"],
+:root[data-theme="light"] .public-site [class*="text-[#94a3b8"],
+:root[data-theme="light"] .public-site [class*="text-[#9CA3AF"],
+:root[data-theme="light"] .public-site [class*="text-[#9ca3af"],
+:root[data-theme="light"] .public-site [class*="text-slate-400"],
+:root[data-theme="light"] .public-site [class*="text-slate-500"],
+:root[data-theme="light"] .public-site [class*="text-gray-400"],
+:root[data-theme="light"] .public-site [class*="text-gray-500"] {
+  color: var(--type-muted) !important;
+}
+
+:root[data-theme="light"] .public-site [class*="text-[#CBD5E1"],
+:root[data-theme="light"] .public-site [class*="text-[#cbd5e1"],
+:root[data-theme="light"] .public-site [class*="text-[#D1D5DB"],
+:root[data-theme="light"] .public-site [class*="text-[#d1d5db"],
+:root[data-theme="light"] .public-site [class*="text-slate-300"],
+:root[data-theme="light"] .public-site [class*="text-gray-300"] {
+  color: var(--type-secondary) !important;
+}
+
+:root[data-theme="light"] .public-site a:not([class*="bg-[#F97316"]):not([class*="bg-[#f97316"]):not([class*="bg-orange-"]) {
+  text-decoration-color: currentColor;
+}
+
+:root[data-theme="light"] .public-site a[href]:not([class*="text-white"]):not([class*="bg-[#F97316"]):not([class*="bg-[#f97316"]):not([class*="bg-orange-"]) {
+  color: var(--type-link);
+}
+
+:root[data-theme="light"] .site-navbar a,
+:root[data-theme="light"] .site-navbar button:not([class*="bg-[#F97316"]):not([class*="bg-[#f97316"]):not([class*="bg-orange-"]) {
+  color: var(--type-navigation) !important;
+  font-weight: 500;
+}
+
+:root[data-theme="light"] .site-navbar a:hover,
+:root[data-theme="light"] .site-navbar button:hover,
+:root[data-theme="light"] .site-navbar a[aria-current="page"] {
+  color: var(--type-navigation-hover) !important;
+}
+
+:root[data-theme="light"] .site-navbar a[class*="bg-[#F97316"],
+:root[data-theme="light"] .site-navbar a[class*="bg-[#f97316"],
+:root[data-theme="light"] .site-navbar a[class*="bg-orange-"],
+:root[data-theme="light"] .site-navbar button[class*="bg-[#F97316"],
+:root[data-theme="light"] .site-navbar button[class*="bg-[#f97316"],
+:root[data-theme="light"] .site-navbar button[class*="bg-orange-"] {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Footer links and headings retain a clear hierarchy on the pale footer. */
+:root[data-theme="light"] .site-footer h2,
+:root[data-theme="light"] .site-footer h3 {
+  color: var(--type-section-heading) !important;
+  font-weight: 650;
+}
+
+:root[data-theme="light"] .site-footer a:not([class*="bg-[#F97316"]):not([class*="bg-[#f97316"]):not([class*="bg-orange-"]) {
+  color: var(--type-secondary) !important;
+}
+
+:root[data-theme="light"] .site-footer a:hover {
+  color: var(--type-navigation-hover) !important;
+}
+
+/* Strong, readable text on controls; placeholders remain secondary, not faint. */
+:root[data-theme="light"] .public-site button,
+:root[data-theme="light"] .public-site [role="button"],
+:root[data-theme="light"] .public-site input[type="submit"],
+:root[data-theme="light"] .public-site input[type="button"] {
+  font-weight: 600;
+}
+
+:root[data-theme="light"] .public-site label,
+:root[data-theme="light"] .public-site legend {
+  font-weight: 500;
+}
+
+:root[data-theme="light"] .public-site input::placeholder,
+:root[data-theme="light"] .public-site textarea::placeholder {
+  color: #64748b !important;
+  opacity: 1;
+}
+
+/* Saturated brand gradients stay crisp. If a text gradient is pale/low contrast,
+   replace only the text paint with a solid brand ink; dimensions stay unchanged. */
+:root[data-theme="light"] .public-site .bg-clip-text,
+:root[data-theme="light"] .public-site [class*="bg-clip-text"],
+:root[data-theme="light"] .public-site [class*="text-transparent"] {
+  background-image: none !important;
+  -webkit-text-fill-color: var(--type-brand) !important;
+  color: var(--type-brand) !important;
+  opacity: 1 !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+}
+
+:root[data-theme="light"] .public-site [class*="text-[#F97316"],
+:root[data-theme="light"] .public-site [class*="text-[#f97316"],
+:root[data-theme="light"] .public-site [class*="text-[#FF7417"],
+:root[data-theme="light"] .public-site [class*="text-[#ff7417"],
+:root[data-theme="light"] .public-site [class*="text-orange-400"],
+:root[data-theme="light"] .public-site [class*="text-orange-500"] {
+  color: var(--type-orange) !important;
+}
+
+/* Preserve white text where the text sits on a solid orange/blue action surface. */
+:root[data-theme="light"] .public-site a[class*="bg-[#F97316"],
+:root[data-theme="light"] .public-site a[class*="bg-[#f97316"],
+:root[data-theme="light"] .public-site a[class*="bg-[#EA580C"],
+:root[data-theme="light"] .public-site a[class*="bg-[#ea580c"],
+:root[data-theme="light"] .public-site a[class*="bg-orange-500"],
+:root[data-theme="light"] .public-site a[class*="bg-orange-600"],
+:root[data-theme="light"] .public-site button[class*="bg-[#F97316"],
+:root[data-theme="light"] .public-site button[class*="bg-[#f97316"],
+:root[data-theme="light"] .public-site button[class*="bg-[#EA580C"],
+:root[data-theme="light"] .public-site button[class*="bg-[#ea580c"],
+:root[data-theme="light"] .public-site button[class*="bg-orange-500"],
+:root[data-theme="light"] .public-site button[class*="bg-orange-600"] {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Keep typography inside the hero product mockups readable without changing art. */
+:root[data-theme="light"] .hero-monitor-screen h1,
+:root[data-theme="light"] .hero-monitor-screen h2,
+:root[data-theme="light"] .hero-monitor-screen h3,
+:root[data-theme="light"] .hero-illustration-screen h1,
+:root[data-theme="light"] .hero-illustration-screen h2,
+:root[data-theme="light"] .hero-illustration-screen h3 {
+  color: var(--type-heading) !important;
+  font-weight: 650;
+}
