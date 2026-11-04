@@ -9,7 +9,7 @@ const Glow = () => (
 );
 
 const Screen = ({ children, className = "" }) => (
-  <div className={`hero-illustration-screen relative rounded-xl border border-sky-300/30 bg-gradient-to-br from-[#0E2547] to-[#071225] shadow-[0_0_40px_rgba(56,189,248,0.25)] overflow-hidden ${className}`}>
+  <div className={`relative rounded-xl border border-sky-300/30 bg-gradient-to-br from-[#0E2547] to-[#071225] shadow-[0_0_40px_rgba(56,189,248,0.25)] overflow-hidden ${className}`}>
     <div className="flex gap-1 px-3 py-2 border-b border-white/5">
       <span className="w-1.5 h-1.5 rounded-full bg-red-400/60" />
       <span className="w-1.5 h-1.5 rounded-full bg-amber-400/60" />
@@ -22,7 +22,7 @@ const Screen = ({ children, className = "" }) => (
 const Lines = ({ rows = 3 }) => (
   <div className="space-y-2">
     {Array.from({ length: rows }).map((_, i) => (
-      <div key={i} className="hero-illustration-line h-1.5 rounded-full bg-white/10" style={{ width: `${90 - i * 18}%` }} />
+      <div key={i} className="h-1.5 rounded-full bg-white/10" style={{ width: `${90 - i * 18}%` }} />
     ))}
   </div>
 );
@@ -32,16 +32,16 @@ const WebsiteScreen = () => (
     <div className="h-3 w-1/2 rounded bg-gradient-to-r from-[#F97316]/70 to-transparent mb-3" />
     <Lines rows={2} />
     <div className="grid grid-cols-3 gap-2 mt-4">
-      {[0, 1, 2].map((i) => <div key={i} className="hero-illustration-card h-12 rounded-md bg-white/5 border border-white/5" />)}
+      {[0, 1, 2].map((i) => <div key={i} className="h-12 rounded-md bg-white/5 border border-white/5" />)}
     </div>
   </>
 );
 
 const DashboardScreen = () => (
   <div className="flex gap-3">
-    <div className="w-8 space-y-2">{[0, 1, 2, 3].map((i) => <div key={i} className={`hero-illustration-line h-2 rounded ${i === 0 ? "bg-[#F97316]/70" : "bg-white/10"}`} />)}</div>
+    <div className="w-8 space-y-2">{[0, 1, 2, 3].map((i) => <div key={i} className={`h-2 rounded ${i === 0 ? "bg-[#F97316]/70" : "bg-white/10"}`} />)}</div>
     <div className="flex-1">
-      <div className="grid grid-cols-3 gap-2 mb-3">{[0, 1, 2].map((i) => <div key={i} className="hero-illustration-card h-8 rounded bg-white/5 border border-white/5" />)}</div>
+      <div className="grid grid-cols-3 gap-2 mb-3">{[0, 1, 2].map((i) => <div key={i} className="h-8 rounded bg-white/5 border border-white/5" />)}</div>
       <div className="flex items-end gap-1.5 h-16">
         {[40, 65, 50, 80, 60, 90, 70].map((h, i) => <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-sky-500/30 to-sky-300/60" style={{ height: `${h}%` }} />)}
       </div>
@@ -53,7 +53,7 @@ const StoreScreen = () => (
   <div className="grid grid-cols-3 gap-2">
     {[0, 1, 2, 3, 4, 5].map((i) => (
       <div key={i} className="space-y-1">
-        <div className={`hero-illustration-card aspect-square rounded-md ${i % 2 ? "bg-[#F97316]/30" : "bg-sky-400/20"}`} />
+        <div className={`aspect-square rounded-md ${i % 2 ? "bg-[#F97316]/30" : "bg-sky-400/20"}`} />
         <div className="h-1 rounded bg-white/15" />
       </div>
     ))}
