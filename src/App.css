@@ -356,3 +356,151 @@ body {
 :root[data-theme="light"] .bg-orange-500 {
   background-color: var(--brand-orange);
 }
+
+
+/* ---- Refined, component-aware light theme ----
+   Keep the dark theme untouched; these rules intentionally target public-site
+   components and artwork instead of recoloring every element by broad filters. */
+:root[data-theme="light"] .public-site {
+  background:
+    radial-gradient(ellipse at 78% 6%, rgba(18, 184, 245, 0.055), transparent 34rem),
+    var(--page-bg);
+  color: var(--text-primary);
+}
+
+:root[data-theme="light"] .site-navbar {
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.92);
+  border-color: var(--border-color);
+  box-shadow: 0 4px 24px rgba(11, 27, 56, 0.045);
+}
+
+:root[data-theme="light"] .site-navbar.bg-transparent {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+:root[data-theme="light"] .site-footer {
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(18, 184, 245, 0.07), transparent 32rem),
+    #f5f8ff;
+  border-color: var(--border-color);
+}
+
+:root[data-theme="light"] .site-footer .text-\[\#FDBA74\],
+:root[data-theme="light"] .site-footer .text-\[\#fdba74\] {
+  color: #a84b08;
+}
+
+/* The hero monitor is a light product mockup in light mode, not a dark screen
+   with its text forcibly recolored. The monitor's inner UI is re-surfaced too. */
+:root[data-theme="light"] .hero-monitor-frame {
+  background: linear-gradient(145deg, #e7edf7 0%, #cfdced 100%);
+  border-color: #cbd8e9;
+  box-shadow: 0 28px 70px rgba(26, 62, 112, 0.16);
+}
+
+:root[data-theme="light"] .hero-monitor-screen {
+  background: linear-gradient(145deg, #ffffff 0%, #f2f7ff 100%);
+  border-color: #dce7f5;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 12px 36px rgba(25, 65, 125, 0.08);
+}
+
+:root[data-theme="light"] .hero-monitor-screen .hero-monitor-heading {
+  color: #0b1b38 !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen .hero-monitor-caption {
+  color: #61728e !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-[#0F172A"],
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-[#0f172a"],
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-slate-900"],
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-[#060E1D"],
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-[#060e1d"] {
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-white/5"],
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-white/10"],
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-white/\[0.05\]"],
+:root[data-theme="light"] .hero-monitor-screen [class*="bg-white/\[0.1\]"] {
+  background-color: rgba(7, 85, 201, 0.055) !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen [class*="border-white/"] {
+  border-color: #e1eaf7 !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen [class*="text-white/"] {
+  color: #71819b !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen [class*="text-white/10"] {
+  color: rgba(7, 85, 201, 0.12) !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen .text-white {
+  color: #0b1b38 !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen .text-\[\#F97316\],
+:root[data-theme="light"] .hero-monitor-screen .text-\[\#f97316\] {
+  color: #ff7417 !important;
+}
+
+:root[data-theme="light"] .hero-monitor-screen svg pattern path {
+  stroke: rgba(7, 85, 201, 0.09);
+}
+
+/* The small code-made service illustrations use light surfaces and ink in
+   light mode while preserving their original geometry and animations. */
+:root[data-theme="light"] .spot-illustration [fill="#13284A"],
+:root[data-theme="light"] .spot-illustration [fill="#1C3A66"] {
+  fill: #eaf2ff !important;
+}
+
+:root[data-theme="light"] .spot-illustration [stroke="rgba(255,255,255,0.18)"] {
+  stroke: #c8d7eb !important;
+}
+
+:root[data-theme="light"] .spot-illustration [fill="rgba(255,255,255,0.18)"] {
+  fill: #9aabc3 !important;
+}
+
+/* Theme-aware shared layout tokens for all reusable page sections and cards. */
+:root[data-theme="light"] .tech-card {
+  border-radius: 16px;
+  background: #ffffff;
+  border-color: #e1eaf7;
+  box-shadow: 0 8px 24px rgba(23, 62, 120, 0.055);
+}
+
+:root[data-theme="light"] .tech-card:hover {
+  border-color: rgba(7, 85, 201, 0.28);
+  box-shadow: 0 14px 32px rgba(23, 62, 120, 0.09);
+}
+
+:root[data-theme="light"] .circuit-bg {
+  background-image:
+    linear-gradient(rgba(7, 85, 201, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7, 85, 201, 0.025) 1px, transparent 1px);
+}
+
+:root[data-theme="light"] .tech-grid {
+  background-image:
+    linear-gradient(to right, rgba(7, 85, 201, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(7, 85, 201, 0.025) 1px, transparent 1px);
+  opacity: 0.55;
+}
+
+:root[data-theme="light"] .bg-\[var\(--rj-navy-950\)\] {
+  background-color: var(--page-bg);
+}
+
+:root[data-theme="light"] .bg-\[var\(--rj-navy-900\)\] {
+  background-color: var(--page-bg-secondary);
+}
