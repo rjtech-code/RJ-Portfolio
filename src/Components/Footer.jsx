@@ -34,7 +34,7 @@ const Footer = () => {
   const whatsapp = whatsappUrl(settings, "Hello RJ TechForce, I would like to discuss a project.");
 
   return (
-    <footer className="site-footer relative bg-[#040A16] border-t border-[var(--rj-panel-border)]">
+    <footer className="relative bg-[#040A16] border-t border-[var(--rj-panel-border)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1.3fr] gap-10 pb-12 border-b border-white/5">
           <div>
